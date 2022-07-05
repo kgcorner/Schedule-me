@@ -1,0 +1,123 @@
+<div class="container" style="padding:15px">
+    <form [formGroup] = "jobCreatorForm">
+        <mat-card>
+            <mat-card-title>
+                Create New Gebnric Job
+              </mat-card-title>
+              <mat-card-content>
+                    <div class="row">
+                        <div class="column small-12 medium-8">
+                            <mat-form-field class="fill-control width-90" >
+                                <input matInput placeholder="Job Name" formControlName="name" required>
+                            </mat-form-field> 
+                            <mat-error *ngIf="!jobCreatorForm.controls['name'].valid && jobCreatorForm.controls['name'].touched">
+                                Please enter a valid name for the Job
+                            </mat-error> 
+                        </div>
+                        <div class="column small-12 medium-4">
+                            <mat-checkbox formControlName="urgent">Run Urgently</mat-checkbox>
+                        </div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="column small-12 medium-8">
+                            <mat-form-field class="width-90" >
+                                <mat-label>Job Params</mat-label>
+                                <textarea matInput (change)="format($event)" formControlName="jobParams" style="height: 150px;"></textarea>
+                            </mat-form-field>
+                            <mat-error *ngIf="!jobCreatorForm.controls['jobParams'].valid && jobCreatorForm.controls['jobParams'].touched">
+                                Please enter a valid Job parameter in JSON Format
+                            </mat-error> 
+                        </div>
+                        <div class="column small-12 medium-4">
+                            <!-- <mat-form-field class="fill-control width-90" floatLabel="always">
+                                <mat-label>Start Time</mat-label>
+                                <input matInput type="time" formControlName="startTime"  class="example-right-align" placeholder="0">
+                            </mat-form-field> -->
+                            <mat-form-field class="fill-control width-90" >
+                                <mat-label>Start Time</mat-label>
+                                <input matInput placeholder="13:30" type="time" formControlName="startTime" required>
+                            </mat-form-field>
+                            <mat-error *ngIf="!jobCreatorForm.controls['startTime'].valid && jobCreatorForm.controls['startTime'].touched">
+                                Please enter a valid Start Time for Job
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column small-12 medium-12">
+                            <mat-radio-group aria-label="Select Job Type" formControlName="jobKind"  >
+                                <mat-radio-button value="MAIL_SENDER">Email Job</mat-radio-button>
+                                <mat-radio-button value="FACEBOOK_POST_CREATOR">Facebook post creator</mat-radio-button>
+                                <mat-radio-button value="INSTAGRAM_POST_CREATOR">Instagram post creator</mat-radio-button>
+                            </mat-radio-group>
+                            <mat-error *ngIf="!jobCreatorForm.controls['startTime'].valid && jobCreatorForm.controls['startTime'].touched">
+                                Please enter a Job Kind
+                            </mat-error> 
+                        </div>
+                        
+                    </div>
+                    <div class="clear-all" style="height: 25px;"></div>
+                    <div class="row">
+                        <div class="column small-6 medium-4">
+                            <button mat-raised-button color="primary" (click)="createJob(jobCreatorForm.value, jobCreatorForm)">Create Job</button>
+                        </div>
+                        <div class="column small-6 medium-4">
+                            <button mat-raised-button type="reset">Reset</button>
+                        </div>
+                        <div class="column medium-4">
+                            
+                        </div>
+                        
+                    </div>
+              </mat-card-content>
+        </mat-card>   
+        
+    </form>
+</div>
+
+<div class="container" style="padding:15px" *ngIf="availableJobs.length > 0">
+    <h2>Avaialble Daily Jobs</h2>
+
+    <table mat-table [dataSource]="availableJobs" class="mat-elevation-z8">
+        <ng-container matColumnDef="jobName">
+            <th mat-header-cell *matHeaderCellDef> Job Name. </th>
+            <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="startTime">
+            <th mat-header-cell *matHeaderCellDef> Start Time </th>
+            <td mat-cell *matCellDef="let element"> {{element.startTime | time}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef> Status </th>
+            <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="jobKind">
+            <th mat-header-cell *matHeaderCellDef> Job Kind </th>
+            <td mat-cell *matCellDef="let element"> {{element.jobKind}} </td>
+        </ng-container>
+        <ng-container matColumnDef="endTime">
+            <th mat-header-cell *matHeaderCellDef> End Time </th>
+            <td mat-cell *matCellDef="let element"> {{element.endTime | time}} </td>
+        </ng-container>
+        <ng-container matColumnDef="operation">
+            <th mat-header-cell *matHeaderCellDef>  
+                <div style="cursor: pointer;" (click)="refresh()">
+                    <span class="material-symbols-outlined">
+                        refresh
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let element"> 
+                <div style="cursor: pointer;" (click)="delete(element.jobId)"><span class="material-symbols-outlined">
+                    delete
+                    </span></div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
