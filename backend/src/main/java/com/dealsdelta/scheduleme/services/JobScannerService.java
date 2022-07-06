@@ -111,7 +111,7 @@ public class JobScannerService {
     @Scheduled(fixedRate = 1000)
     public void scanRecordProcessorJobs() {
         LOGGER.debug("Scanning Record processor jobs");
-        Operation operation = new Operation(IJob.JOB_STATUS.IDLE.toString(), Operation.TYPES.STRING, "status",
+        Operation operation = new Operation(IJob.JOB_STATUS.DUE.toString(), Operation.TYPES.STRING, "status",
             Operation.OPERATORS.EQ);
         List<Operation> operations = new ArrayList<>();
         operations.add(operation);

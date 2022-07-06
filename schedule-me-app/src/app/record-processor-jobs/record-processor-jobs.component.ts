@@ -21,7 +21,7 @@ export class RecordProcessorJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['name', 'startTime', 'status', 'jobKind','endTime', 'operation'];
+  displayedColumns: string[] = ['name', 'startTime', 'status', 'jobKind','endTime', 'operation', 'refresh'];
   jobCreatorForm : FormGroup;
   availableJobs : RecordProcessorJob[] = [];
   expandedJob : RecordProcessorJob | null = null;
@@ -77,7 +77,7 @@ export class RecordProcessorJobsComponent implements OnInit {
     job.jobParams = JSON.parse(job.jobParams)
     this.jobService.createRecordProcessorJob(job).subscribe(response => {
       if(response && response.body) {        
-        this.availableJobs.push(response.body);
+        this.getRecordProcessorJob();
       }
     });
   }

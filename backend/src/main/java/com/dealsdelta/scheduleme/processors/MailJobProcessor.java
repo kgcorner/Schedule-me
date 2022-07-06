@@ -42,7 +42,7 @@ public class MailJobProcessor implements JobProcessor {
                     "MailJobProcessor");
             } else {
                 int count = 0;
-                updateRecordCount(job, job.getJobParams().size());
+                updateRecordCount(job, (((List<String>)job.getJobParams().get("emails")).size()));
                 for(String email : ((List<String>) job.getJobParams().get("emails"))) {
                     logService.write(job, Log.VERBOSE, "Running Mail processing job for " +
                             email,
@@ -53,7 +53,7 @@ public class MailJobProcessor implements JobProcessor {
 
                     }
                     count++;
-                    updateRecordCount(job, count);
+                    updateProcessedRecordCount(job, count);
                     runningJobDao.update((RunningJobModel) wrapper.getRunningJob());
                 }
                 logService.write(job, Log.INFO, "All Mails sent at " + new Date().toString(),

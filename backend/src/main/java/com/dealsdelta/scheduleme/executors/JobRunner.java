@@ -90,6 +90,9 @@ public class JobRunner implements Runnable {
 
         if(job instanceof RecordProcessorJobModel) {
             ((RecordProcessorJobModel) job).setStatus(status);
+            if(status.equalsIgnoreCase("COMPLETED")) {
+                ((RecordProcessorJobModel) job).setEndTime(LocalTime.now());
+            }
             taskService.getRecordProcessorJobDao().update((RecordProcessorJobModel) job);
         }
 
