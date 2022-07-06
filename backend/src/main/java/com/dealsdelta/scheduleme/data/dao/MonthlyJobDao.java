@@ -56,4 +56,8 @@ public class MonthlyJobDao {
     public void updateMany(List<Operation> conditions, String key, Object value) {
         jobRepo.updateMany(conditions, key, value, MonthlyJobModel.class);
     }
+
+    public long getJobCount() {
+        return jobRepo.getCount(MonthlyJobModel.class);
+    }
 }

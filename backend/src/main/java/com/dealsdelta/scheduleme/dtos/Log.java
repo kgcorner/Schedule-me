@@ -27,4 +27,5 @@ public class Log implements Serializable {
     private String message;
     private String jobId;
     private String level;
+    private String runId;
 }

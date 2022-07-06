@@ -13,7 +13,7 @@ export class GenericJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind','endTime', 'operation'];
+  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind','endTime', 'operation', 'logs', 'history'];
   jobCreatorForm : FormGroup;
   availableJobs : GenericJob[] = [];
   constructor(private fb: FormBuilder, private jobService : JobService) { 

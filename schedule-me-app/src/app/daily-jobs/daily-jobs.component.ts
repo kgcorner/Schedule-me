@@ -13,7 +13,7 @@ export class DailyJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind', 'operation'];
+  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind', 'operation', 'logs', 'history'];
   jobCreatorForm : FormGroup;
   availableJobs : DailyJob[] = [];
   constructor(private fb: FormBuilder, private jobService : JobService) { 

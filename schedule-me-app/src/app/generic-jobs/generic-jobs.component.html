@@ -102,6 +102,27 @@
             <th mat-header-cell *matHeaderCellDef> End Time </th>
             <td mat-cell *matCellDef="let element"> {{element.endTime | time}} </td>
         </ng-container>
+        <ng-container matColumnDef="logs">
+            <th mat-header-cell *matHeaderCellDef> Log </th>
+            <td mat-cell *matCellDef="let element"> 
+                <a class="logLink" routerLink="/logs/{{element.jobId}}/{{element.name}}">
+                    <span class="material-symbols-outlined">
+                        description
+                    </span>
+                </a>                
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="history">
+            <th mat-header-cell *matHeaderCellDef> Audit </th>
+            <td mat-cell *matCellDef="let element"> 
+                <a class="logLink" routerLink="/audits/{{element.jobId}}/{{element.name}}">
+                    <span class="material-symbols-outlined">
+                        history
+                    </span>
+                </a>                
+            </td>
+        </ng-container>
         <ng-container matColumnDef="operation">
             <th mat-header-cell *matHeaderCellDef>  
                 <div >

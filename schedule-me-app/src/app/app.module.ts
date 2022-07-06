@@ -34,6 +34,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TimePipe } from './pips/time.pipe';
 import { JobLogsComponent } from './job-logs/job-logs.component';
+import { JobAuditsComponent } from './job-audits/job-audits.component';
+import { JobMiniLogsComponent } from './job-mini-logs/job-mini-logs.component';
+import { GoogleChartsModule } from 'angular-google-charts';
 @NgModule({
   declarations: [
     AppComponent,
@@ -49,7 +52,9 @@ import { JobLogsComponent } from './job-logs/job-logs.component';
     RecordProcessorHourlyJobsComponent,
     RecordProcessorMonthlyJobsComponent,
     TimePipe,
-    JobLogsComponent
+    JobLogsComponent,
+    JobAuditsComponent,
+    JobMiniLogsComponent
   ],
   imports: [
     BrowserModule,
@@ -72,7 +77,8 @@ import { JobLogsComponent } from './job-logs/job-logs.component';
     MatRadioModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    GoogleChartsModule
   ],
   providers: [],
   bootstrap: [NavigationComponent]

@@ -214,11 +214,22 @@ public class MongoRepository<T extends Serializable> {
         template.remove(document);
     }
 
-    
+
     public Object runSelectNativeQuery(String queryStr, String collectionName, int limit, int offset) {
         String command = "{\"find\":\"%s\",\"filter\":%s,\"limit\" : %s,\"skip\" : %s}";
         command = String.format(command, collectionName, queryStr, limit, offset);
 
         return template.executeCommand(command);
+    }
+
+    public Object runSelectNativeQuery(String queryStr) {
+        Document bsonCmd = Document.parse(queryStr);
+        Document document = template.executeCommand(bsonCmd);
+        Document cursor = (Document) document.get("cursor");
+        return cursor.get("firstBatch");
+    }
+
+    public long getCount(Class<T> type) {
+        return template.count(new Query(), type);
     }
 }

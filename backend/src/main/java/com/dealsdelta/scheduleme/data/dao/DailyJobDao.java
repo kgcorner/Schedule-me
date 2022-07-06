@@ -58,4 +58,8 @@ public class DailyJobDao {
     public void updateMany(List<Operation> conditions, String key, Object value) {
         jobRepo.updateMany(conditions, key, value, DailyJobModel.class);
     }
+
+    public long getJobCount() {
+        return jobRepo.getCount(DailyJobModel.class);
+    }
 }

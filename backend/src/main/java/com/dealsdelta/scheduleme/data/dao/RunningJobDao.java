@@ -50,4 +50,8 @@ public class RunningJobDao  {
     public List<RunningJobModel> getAllBy(List<Operation> operations) {
         return jobRepo.getAll(operations, 0, Integer.MAX_VALUE, RunningJobModel.class);
     }
+
+    public long getJobCount() {
+        return jobRepo.getCount(RunningJobModel.class);
+    }
 }

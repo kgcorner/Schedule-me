@@ -1,24 +1,83 @@
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
-      <mat-card class="dashboard-card">
+  <span class="material-symbols-outlined" style="cursor: pointer; float: right; margin-right:50px" (click)="populateCharts()">
+    refresh
+  </span>
+  <mat-card class="Job-Run-card" style="margin-top:50px" *ngIf="jobRanConfig.data && jobRanConfig.data.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        Jobs Run Per day
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="dashboard-card-content">
+      <div>
+
+        <google-chart #chart style="width: 80%; display: inline-block; margin: 10px  auto;"
+          [title]="jobRanConfig.title"
+          [type]="jobRanConfig.type"
+          [data]="jobRanConfig.data"
+          [columns] = "jobRanConfig.columnNames"
+          [options]="jobRanConfig.options">
+        </google-chart>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="Job-Run-card" *ngIf="jobFailedConfig.data && jobFailedConfig.data.length > 0">
+    <mat-card-header>
+      <mat-card-title>
+        Jobs Failed Per day
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="dashboard-card-content">
+      <div>
+
+        <google-chart #chart style="width: 80%; display: inline-block; margin: 10px  auto;"
+        [title]="jobFailedConfig.title"
+        [type]="jobFailedConfig.type"
+        [data]="jobFailedConfig.data"
+        [columns] = "jobFailedConfig.columnNames"
+        [options]="jobFailedConfig.options">
+        </google-chart>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  <div class="row">
+    <div class="column small-12 medium-6">
+      <mat-card class="Job-Run-card" *ngIf="allJobCountConfig.data && allJobCountConfig.data.length > 0">
         <mat-card-header>
           <mat-card-title>
-            {{card.title}}
-            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
-              <button mat-menu-item>Remove</button>
-            </mat-menu>
+            All available jobs
           </mat-card-title>
         </mat-card-header>
         <mat-card-content class="dashboard-card-content">
-          <div>Card Content Here</div>
+          <div>
+    
+            <google-chart #chart style="width: 98%; display: inline-block; margin: 10px  auto;"
+            [title]="allJobCountConfig.title"
+            [type]="allJobCountConfig.type"
+            [data]="allJobCountConfig.data"
+            [columns] = "allJobCountConfig.columnNames"
+            [options]="allJobCountConfig.options">
+            </google-chart>
+          </div>
         </mat-card-content>
       </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+    </div>
+
+    <div class="column small-12 medium-6">
+      <mat-card class="Job-Run-card">
+        <mat-card-header>
+          <mat-card-title>
+            Running Jobs count
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <div style="font-size: 75px; border-radius: 50%; border: solid;display: inline-block; margin: 15px auto; width: 150px; height:150px; line-height: 150px;">    
+            {{totalRunningJobs}}
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
 </div>

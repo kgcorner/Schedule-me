@@ -6,7 +6,9 @@ import com.dealsdelta.scheduleme.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Description : <Write class Description>
@@ -156,8 +158,34 @@ public class JobResource {
         return service.getLogs(jobId, page, count);
     }
 
+    @GetMapping("/jobs/{jobId}/audit")
+    public List<JobAudit> getJopAudits(@PathVariable String jobId, @RequestParam(name = "page", defaultValue = "0") int page,
+                                @RequestParam(name = "count", defaultValue = "1000") int count) {
+        return service.getJobAudits(jobId, page, count);
+    }
 
+    @GetMapping("/jobs-count")
+    public Map<String, Long> getAllJobsCount() {
+        return service.getAllJobsCount();
+    }
 
+    @GetMapping("/running-jobs-count")
+    public long getRunningJobCount() {
+        return service.getRunningJobCount();
+    }
 
+    @GetMapping("/job-run-per-day")
+    public List<JobRunStat> getJobsRanByDay() {
+        return service.getJobsRanByDay();
+    }
 
+    @GetMapping("/job-failed-per-day")
+    public List<JobRunStat> getJobFailedByDay() {
+        return service.getJobFailedByDay();
+    }
+
+    @GetMapping("/create-bogus-data")
+    public List<JobAudit> createBogusAudit() {
+        return service.createBogusAudit();
+    }
 }

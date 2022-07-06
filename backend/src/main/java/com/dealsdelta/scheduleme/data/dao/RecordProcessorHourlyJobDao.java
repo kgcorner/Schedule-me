@@ -1,6 +1,7 @@
 package com.dealsdelta.scheduleme.data.dao;
 
 
+import com.dealsdelta.scheduleme.data.models.DailyJobModel;
 import com.dealsdelta.scheduleme.data.models.RecordProcessorHourlyJobModel;
 import com.dealsdelta.scheduleme.data.models.RecordProcessorJobModel;
 import com.dealsdelta.scheduleme.data.repo.JobRepo;
@@ -51,5 +52,9 @@ public class RecordProcessorHourlyJobDao {
 
     public List<RecordProcessorHourlyJobModel> getAllBy(List<Operation> operations) {
         return jobRepo.getAll(operations, 0, Integer.MAX_VALUE, RecordProcessorHourlyJobModel.class);
+    }
+
+    public long getJobCount() {
+        return jobRepo.getCount(RecordProcessorHourlyJobModel.class);
     }
 }

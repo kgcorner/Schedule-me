@@ -6,10 +6,8 @@ import com.dealsdelta.scheduleme.data.dao.HourlyJobDao;
 import com.dealsdelta.scheduleme.data.dao.LogDao;
 import com.dealsdelta.scheduleme.data.dao.MonthlyJobDao;
 import com.dealsdelta.scheduleme.data.models.*;
-import com.dealsdelta.scheduleme.dtos.HourlyJob;
-import com.dealsdelta.scheduleme.dtos.IJob;
-import com.dealsdelta.scheduleme.dtos.JobWrapper;
-import com.dealsdelta.scheduleme.dtos.RunningJob;
+import com.dealsdelta.scheduleme.data.repo.Operation;
+import com.dealsdelta.scheduleme.dtos.*;
 import com.dealsdelta.scheduleme.processors.JobProcessor;
 import com.dealsdelta.scheduleme.services.TaskService;
 import org.apache.log4j.Logger;
@@ -17,6 +15,9 @@ import org.apache.log4j.Logger;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Description : <Write class Description>
@@ -36,7 +37,9 @@ public class JobRunner implements Runnable {
     }
 
     @Override
-    public void run() {        
+    public void run() {
+        JobAuditModel jobAuditModel = new JobAuditModel();
+        jobAuditModel.setStartTime(new Date());
         LOGGER.info("Starting job : " + runningJob.getJob().getName()+ "(" + runningJob.getJob().getJobId()+")");
         updateJobStatus(runningJob.getJob(), IJob.JOB_STATUS.RUNNING.toString());
         jobProcessor.setLogService(taskService.getLogService());        
@@ -46,11 +49,28 @@ public class JobRunner implements Runnable {
         try {
             jobProcessor.processJob(wrapper);
             updateJobStatus(runningJob.getJob(), IJob.JOB_STATUS.COMPLETED.toString());
+            jobAuditModel.setStatus( IJob.JOB_STATUS.COMPLETED.toString());
         } catch (Exception x) {
             updateJobStatus(runningJob.getJob(), IJob.JOB_STATUS.FAILED.toString());
             jobProcessor.recover(wrapper);
+            jobAuditModel.setStatus( IJob.JOB_STATUS.FAILED.toString());
         }
+        List<Operation> operations = new ArrayList<>();
+        Operation operation = new Operation(wrapper.getRunningJob().getRunningJobId(), Operation.TYPES.STRING, "runId", Operation.OPERATORS.EQ);
+        operations.add(operation);
+        List<LogModel> allLogs = taskService.getLogDao().getAllBy(operations, 0, Integer.MAX_VALUE);
+        jobAuditModel.setJobId(wrapper.getRunningJob().getJobId());
+        jobAuditModel.setLogs(allLogs);
+        jobAuditModel.setJob(wrapper.getRunningJob().getJob());
+        jobAuditModel.setEndTime(new Date());
         taskService.getRunningJobDao().delete((RunningJobModel) runningJob);
+        taskService.getJobAuditDao().create(jobAuditModel);
+    }
+
+    private void saveJobAudit(JobWrapper wrapper) {
+
+        JobAuditModel model = new JobAuditModel();
+
     }
 
     private void updateJobStatus(IJob job, String status) {

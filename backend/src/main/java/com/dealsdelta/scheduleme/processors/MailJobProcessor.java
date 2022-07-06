@@ -32,21 +32,21 @@ public class MailJobProcessor implements JobProcessor {
             if(job.getJobParams().containsKey("email")) {
                 logService.write(job, Log.VERBOSE, "Running Mail processing job for " +
                         job.getJobParams().get("email"),
-                    "MailJobProcessor");
+                    "MailJobProcessor", wrapper.getRunningJob().getRunningJobId());
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
 
                 }
                 logService.write(job, Log.INFO, "Mail sent at " + new Date().toString(),
-                    "MailJobProcessor");
+                    "MailJobProcessor", wrapper.getRunningJob().getRunningJobId());
             } else {
                 int count = 0;
                 updateRecordCount(job, (((List<String>)job.getJobParams().get("emails")).size()));
                 for(String email : ((List<String>) job.getJobParams().get("emails"))) {
                     logService.write(job, Log.VERBOSE, "Running Mail processing job for " +
                             email,
-                        "MailJobProcessor");
+                        "MailJobProcessor", wrapper.getRunningJob().getRunningJobId());
                     try {
                         Thread.sleep(5000);
                     } catch (InterruptedException e) {
@@ -57,11 +57,11 @@ public class MailJobProcessor implements JobProcessor {
                     runningJobDao.update((RunningJobModel) wrapper.getRunningJob());
                 }
                 logService.write(job, Log.INFO, "All Mails sent at " + new Date().toString(),
-                    "MailJobProcessor");
+                    "MailJobProcessor", wrapper.getRunningJob().getRunningJobId());
             }
         } else {
             logService.write(job, Log.ERROR, "Invalid Job param found. No email or emails attached",
-                "MailJobProcessor");
+                "MailJobProcessor", wrapper.getRunningJob().getRunningJobId());
             throw new IllegalArgumentException("Invalid Job param found. No email or emails attached");
         }
 

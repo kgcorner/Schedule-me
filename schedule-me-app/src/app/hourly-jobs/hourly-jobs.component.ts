@@ -13,7 +13,7 @@ export class HourlyJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind', 'operation'];
+  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind', 'operation', 'logs', 'history'];
   jobCreatorForm : FormGroup;
   availableJobs : HourlyJob[] = [];
   constructor(private fb: FormBuilder, private jobService : JobService) { 

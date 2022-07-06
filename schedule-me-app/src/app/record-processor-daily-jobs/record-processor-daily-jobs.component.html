@@ -96,13 +96,30 @@
     </th>
 
     <td mat-cell *matCellDef="let element"> 
-        <div *ngIf="column!='operation';else showOperation">
+        <div *ngIf="column!='operation' && column!='log' && column!='audit';else showOperation">
             {{element[column] | time}} 
         </div>
-        <ng-template #showOperation>
-            <div><span class="material-symbols-outlined"  style="cursor: pointer;" (click)="delete(element.jobId)">
-                delete
+        <ng-template #showOperation>            
+            <div *ngIf="column == 'operation'">
+                <span class="material-symbols-outlined" style="cursor: pointer;" (click)="delete(element.jobId)">
+                    delete
                 </span>
+            </div>
+
+            <div *ngIf="column == 'log'">
+                <a class="logLink" routerLink="/logs/{{element.jobId}}/{{element.name}}">
+                    <span class="material-symbols-outlined">
+                        description
+                    </span>
+                </a> 
+            </div>
+
+            <div *ngIf="column == 'audit'">
+                <a class="logLink" routerLink="/audits/{{element.jobId}}/{{element.name}}">
+                    <span class="material-symbols-outlined">
+                        history
+                    </span>
+                </a>
             </div>
         </ng-template>    
     </td>

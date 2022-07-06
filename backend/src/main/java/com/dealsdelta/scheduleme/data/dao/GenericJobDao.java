@@ -52,4 +52,8 @@ public class GenericJobDao {
     public List<GenericJobModel> getAllBy(List<Operation> operations) {
         return jobRepo.getAll(operations, 0, Integer.MAX_VALUE, GenericJobModel.class);
     }
+
+    public long getJobCount() {
+        return jobRepo.getCount(GenericJobModel.class);
+    }
 }

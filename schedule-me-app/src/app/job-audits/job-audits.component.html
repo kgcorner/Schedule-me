@@ -1,0 +1,71 @@
+<div class="container" style="padding:15px" *ngIf="jobAudits && jobAudits.length > 0; else noAudit">
+    <h2>Audit for Job : {{name}}</h2>
+
+    <table mat-table
+       [dataSource]="jobAudits" multiTemplateDataRows
+       class="mat-elevation-z8">
+  <ng-container matColumnDef="{{column}}" *ngFor="let column of displayedColumns">
+    <th mat-header-cell *matHeaderCellDef> 
+        <div style="text-transform: capitalize;">
+            {{column}} 
+        </div>  
+    </th>
+    <td mat-cell *matCellDef="let element"> 
+      <div>
+          {{element[column] | time}} 
+      </div>
+    </td>
+    
+  </ng-container>
+  <ng-container matColumnDef="expand">
+    <th mat-header-cell *matHeaderCellDef aria-label="row actions">&nbsp;</th>
+    <td mat-cell *matCellDef="let element">
+      <button mat-icon-button aria-label="expand row" (click)="(expandedAudit = expandedAudit === element ? null : element); $event.stopPropagation()">
+        <!-- <mat-icon >keyboard_arrow_down</mat-icon> -->
+        <span class="material-symbols-outlined" *ngIf="expandedAudit !== element">
+            keyboard_arrow_down
+        </span>
+        <span class="material-symbols-outlined" *ngIf="expandedAudit === element">
+            keyboard_arrow_up
+        </span>
+            
+        <!-- <mat-icon >keyboard_arrow_up</mat-icon> -->
+      </button>
+    </td>
+  </ng-container>
+
+  <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+  <ng-container matColumnDef="expandedDetail">
+    <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumnsWithExpand.length">
+      <div class="example-element-detail"
+           [@detailExpand]="element == expandedAudit ? 'expanded' : 'collapsed'">
+        <div class="example-element-description">
+            <h2> Log </h2>
+            <app-job-mini-logs [logs] = "element.logs"></app-job-mini-logs>          
+            <div class="job-records-details" *ngIf="element.job.recordCount">
+              <h2>Record Datails</h2>
+              <ul>
+                <li>Total Record Count : {{element.job.recordCount}}</li>
+                <li>Total Record Processed : {{element.job.recordProcessed}}</li>
+              </ul>
+            </div>
+        </div>
+      </div>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumnsWithExpand"></tr>
+  <tr mat-row *matRowDef="let element; columns: displayedColumnsWithExpand;"
+      class="example-element-row"
+      [class.example-expanded-row]="expandedAudit === element"
+      (click)="expandedAudit = expandedAudit === element ? null : element">
+  </tr>
+  <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+</table>
+</div>
+
+<ng-template #noAudit>
+    <div style="padding: 50px; text-align: center;">
+        No Job Audit found for {{name}}
+    </div>    
+</ng-template>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpService } from './http.service';
+import { JobAudit } from './models/audit';
 import { DailyJob } from './models/daily-job';
 import { GenericJob } from './models/generic-job';
 import { HourlyJob } from './models/hourly-job';
@@ -26,6 +27,11 @@ export class JobService {
   private RECORD_PROCESSOR_JOBS =  "/record-processor-jobs";
   private GENERIC_JOBS =  "/generic-jobs";
   private JOB_LOGS =  "/jobs/{1}/logs";
+  private JOB_AUDIT =  "/jobs/{1}/audit";
+  private ALL_JOB_COUNT =  "/jobs-count";
+  private RUNNING_JOB_COUNT =  "/running-jobs-count";
+  private JOB_RUN_PER_DAY = "/job-run-per-day"
+  private JOB_FAILED_PER_DAY = "/job-failed-per-day"
 
   constructor(private http : HttpService) { }
 
@@ -137,5 +143,25 @@ export class JobService {
 
   getJobLogs(jobId: string) {
     return this.http.doGet<Log[]>(environment.host + this.JOB_LOGS.replace("{1}", jobId), null);
+  }
+
+  getJobAudit(jobId: string) {
+    return this.http.doGet<JobAudit[]>(environment.host + this.JOB_AUDIT.replace("{1}", jobId), null);
+  }
+
+  getAllJobsCount() {
+    return this.http.doGet<any>(environment.host + this.ALL_JOB_COUNT, null);
+  }
+
+  getRunningJobsCount() {
+    return this.http.doGet<number>(environment.host + this.RUNNING_JOB_COUNT, null);
+  }
+
+  getJobRunPerDay() {
+    return this.http.doGet<any[]>(environment.host + this.JOB_RUN_PER_DAY, null);
+  }
+
+  getJobFailedPerDay() {
+    return this.http.doGet<any[]>(environment.host + this.JOB_FAILED_PER_DAY, null);
   }
 }

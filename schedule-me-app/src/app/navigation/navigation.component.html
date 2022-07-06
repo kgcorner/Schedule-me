@@ -5,8 +5,8 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="dashboard">Dashboard</a>
-      <a mat-list-item routerLink="jobs">Jobs</a>
+      <a mat-list-item routerLink="dashboard" [ngClass]="{'active': menu=='dashboard'}" (click)="select('dashboard')">Dashboard</a>
+      <a mat-list-item routerLink="jobs" [ngClass]="{'active': menu=='jobs'}" (click)="select('jobs')">Jobs</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -19,7 +19,7 @@
         *ngIf="isHandset$ | async">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <span>schedule-me-app</span>
+      <span>Schedule Me</span>
     </mat-toolbar>
     <router-outlet></router-outlet>
   </mat-sidenav-content>

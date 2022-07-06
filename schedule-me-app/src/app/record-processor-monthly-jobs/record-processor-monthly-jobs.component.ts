@@ -21,7 +21,7 @@ export class RecordProcessorMonthlyJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['name', 'startTime', 'status', 'jobKind','dayOfMonth', 'operation', 'refresh'];
+  displayedColumns: string[] = ['name', 'startTime', 'status', 'jobKind','dayOfMonth', 'operation', 'log', 'audit', 'refresh'];
   jobCreatorForm : FormGroup;
   availableJobs : RecordProcessorMonthlyJob[] = [];
   expandedJob : RecordProcessorMonthlyJob | null = null;

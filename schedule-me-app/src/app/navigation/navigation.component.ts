@@ -16,6 +16,10 @@ export class NavigationComponent {
       shareReplay()
     );
 
+    menu : string = "";
   constructor(private breakpointObserver: BreakpointObserver) {}
 
+  select(menu : string) {
+    this.menu = menu;
+  }
 }

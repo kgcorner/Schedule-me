@@ -9,9 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Description : <Write class Description>
@@ -54,6 +52,9 @@ public class TaskService {
 
     @Autowired
     private RunningJobDao runningJobDao;
+
+    @Autowired
+    private JobAuditDao jobAuditDao;
 
 
     public List<IJob> getJobs(String status) {
@@ -172,6 +173,9 @@ public class TaskService {
         return runningJobDao;
     }
 
+    public JobAuditDao getJobAuditDao() {
+        return jobAuditDao;
+    }
 
     public List<DailyJob> getDailyJobs() {
         List<DailyJobModel> models = dailyJobDao.getDailyJobs();
@@ -287,5 +291,110 @@ public class TaskService {
             logs.add(model);
         }
         return logs;
+    }
+
+
+    public List<JobAudit> getJobAudits(String jobId, int page, int count) {
+        List<Operation> operations = new ArrayList<>();
+        Operation operation = new Operation(jobId, Operation.TYPES.STRING, "jobId", Operation.OPERATORS.EQ);
+        operations.add(operation);
+        List<JobAudit> audits = new ArrayList<>();
+        List<JobAuditModel> models = jobAuditDao.getAllBy(operations, page, count);
+        for(JobAuditModel model : models) {
+            audits.add(model);
+        }
+        return audits;
+
+    }
+
+    public Map<String, Long> getAllJobsCount() {
+        Map<String, Long> jobsCount = new HashMap<>();
+        jobsCount.put("Generic Jobs", genericJobDao.getJobCount());
+        jobsCount.put("Daily Jobs", dailyJobDao.getJobCount());
+        jobsCount.put("Hourly Jobs", hourlyJobDao.getJobCount());
+        jobsCount.put("Monthly Jobs", monthlyJobDao.getJobCount());
+        jobsCount.put("Record Processor Daily Jobs", recordProcessorDailyJobDao.getJobCount());
+        jobsCount.put("Record Processor Hourly Jobs", recordProcessorHourlyJobDao.getJobCount());
+        jobsCount.put("Record Processor Monthly Jobs", recordProcessorMonthlyJobDao.getJobCount());
+        jobsCount.put("Record Processor Jobs", recordProcessorJobDao.getJobCount());
+        return jobsCount;
+    }
+
+    public long getRunningJobCount() {
+        return runningJobDao.getJobCount();
+    }
+
+    public List<JobRunStat> getJobsRanByDay() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -30);
+
+        Calendar c1 = Calendar.getInstance();
+        c1.add(Calendar.DATE, 1);
+        return jobAuditDao.getJobRunByDay(c.getTime(), c1.getTime());
+    }
+
+    public List<JobAudit> createBogusAudit() {
+        List<DailyJobModel> dailyJobs = dailyJobDao.getDailyJobs();
+        List<HourlyJobModel> hourlyJobs = hourlyJobDao.getHourlyJobs();
+        List<MonthlyJobModel> monthlyJobs = monthlyJobDao.getMonthlyJobs();
+        List<GenericJobModel> genericJobs = genericJobDao.getGenericJobs();
+        List<RecordProcessorDailyJobModel> recordProcessorDailyJobs = recordProcessorDailyJobDao.getRecordProcessorDailyJobs();
+        List<RecordProcessorHourlyJobModel> recordProcessorHourlyJobs = recordProcessorHourlyJobDao.getRecordProcessorHourlyJobs();
+        List<RecordProcessorMonthlyJobModel> recordProcessorMonthlyJobs = recordProcessorMonthlyJobDao.getRecordProcessorMonthlyJobs();
+        List<IJob> jobs = new ArrayList<>();
+        for(IJob job : dailyJobs) {
+            jobs.add(job);
+        }
+
+        for(IJob job : hourlyJobs) {
+            jobs.add(job);
+        }
+
+        for(IJob job : monthlyJobs) {
+            jobs.add(job);
+        }
+
+        for(IJob job : recordProcessorDailyJobs) {
+            jobs.add(job);
+        }
+
+        for(IJob job : recordProcessorHourlyJobs) {
+            jobs.add(job);
+        }
+
+        for(IJob job : recordProcessorMonthlyJobs) {
+            jobs.add(job);
+        }
+        List<JobAudit> audits = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            for(IJob job : jobs) {
+                JobAuditModel model = new JobAuditModel();
+                int randomDate = new Random().nextInt(25);
+                Calendar c = Calendar.getInstance();
+                c.add(Calendar.DATE, -(randomDate));
+                model.setStartTime(c.getTime());
+                c.add(Calendar.MINUTE, 1);
+                model.setEndTime(c.getTime());
+                model.setJobId(job.getJobId());
+                model.setJob(job);
+                model.setLogs(Collections.emptyList());
+                if(randomDate %3 == 0)
+                    model.setStatus("FAILED");
+                else
+                    model.setStatus("COMPLETE");
+                jobAuditDao.create(model);
+                audits.add(model);
+            }
+        }
+
+        return audits;
+    }
+
+    public List<JobRunStat> getJobFailedByDay() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, -30);
+        Calendar c1 = Calendar.getInstance();
+        c1.add(Calendar.DATE, 1);
+        return jobAuditDao.getJobFailedByDay(c.getTime(), c1.getTime());
     }
 }

@@ -21,13 +21,14 @@ public class LogService {
     @Autowired
     private LogDao logDao;
 
-    public void write(IJob job, String level, String message, String module) {
+    public void write(IJob job, String level, String message, String module, String runId) {
         LogModel log = new LogModel();
         log.setDate(new Date());
         log.setJobId(job.getJobId());
         log.setMessage(message);
         log.setModule(module);
         log.setLevel(level);
+        log.setRunId(runId);
         logDao.create(log);
     }
 }

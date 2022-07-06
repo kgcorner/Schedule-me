@@ -21,7 +21,7 @@ export class RecordProcessorDailyJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['name', 'startTime', 'status', 'jobKind','operation', 'refresh'];
+  displayedColumns: string[] = ['name', 'startTime', 'status', 'jobKind','operation', 'log', 'audit', 'refresh'];
   jobCreatorForm : FormGroup;
   availableJobs : RecordProcessorDailyJob[] = [];
   expandedJob : RecordProcessorDailyJob | null = null;
