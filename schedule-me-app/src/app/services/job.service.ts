@@ -164,4 +164,37 @@ export class JobService {
   getJobFailedPerDay() {
     return this.http.doGet<any[]>(environment.host + this.JOB_FAILED_PER_DAY, null);
   }
+
+  runDailyJob(jobId : string) {
+    return this.http.doPut<DailyJob>(environment.host + this.DAILY_JOBS+"/"+jobId, null, null);
+  }
+
+  runMonthlyJob(jobId : string) {
+    return this.http.doPut<MonthlyJob>(environment.host + this.MONTHLY_JOBS+"/"+jobId, null, null);
+  }
+
+  runHourlyJob(jobId : string) {
+    return this.http.doPut<HourlyJob>(environment.host + this.HOURLY_JOBS+"/"+jobId, null, null);
+  }
+
+
+  runGenericJob(jobId : string) {
+    return this.http.doPut<GenericJob>(environment.host + this.GENERIC_JOBS+"/"+jobId, null, null);
+  }
+
+  runRecordProcessorJob(jobId : string) {
+    return this.http.doPut<RecordProcessorJob>(environment.host + this.RECORD_PROCESSOR_JOBS+"/"+jobId, null, null);
+  }
+
+  runRecordProcessorDailyJob(jobId : string) {
+    return this.http.doPut<RecordProcessorDailyJob>(environment.host + this.RECORD_PROCESSOR_DAILY_JOBS+"/"+jobId, null, null);
+  }
+
+  runRecordProcessorHourlyJob(jobId : string) {
+    return this.http.doPut<RecordProcessorHourlyJob>(environment.host + this.RECORD_PROCESSOR_HOURLY_JOBS+"/"+jobId, null, null);
+  }
+
+  runRecordProcessorMonthlyJob(jobId : string) {
+    return this.http.doPut<RecordProcessorMonthlyJob>(environment.host + this.RECORD_PROCESSOR_MONTHLY_JOBS+"/"+jobId, null, null);
+  }
 }

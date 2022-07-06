@@ -37,6 +37,13 @@ import { JobLogsComponent } from './job-logs/job-logs.component';
 import { JobAuditsComponent } from './job-audits/job-audits.component';
 import { JobMiniLogsComponent } from './job-mini-logs/job-mini-logs.component';
 import { GoogleChartsModule } from 'angular-google-charts';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
+import { ConfirmJobDeleteComponent } from './confirm-job-delete/confirm-job-delete.component';
+import { ConfirmJobRunComponent } from './confirm-job-run/confirm-job-run.component';
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,7 +61,9 @@ import { GoogleChartsModule } from 'angular-google-charts';
     TimePipe,
     JobLogsComponent,
     JobAuditsComponent,
-    JobMiniLogsComponent
+    JobMiniLogsComponent,
+    ConfirmJobDeleteComponent,
+    ConfirmJobRunComponent
   ],
   imports: [
     BrowserModule,
@@ -78,7 +87,9 @@ import { GoogleChartsModule } from 'angular-google-charts';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    GoogleChartsModule
+    GoogleChartsModule,
+    MatSnackBarModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [NavigationComponent]

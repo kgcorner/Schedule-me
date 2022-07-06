@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ConfirmJobDeleteComponent } from '../confirm-job-delete/confirm-job-delete.component';
+import { ConfirmJobRunComponent } from '../confirm-job-run/confirm-job-run.component';
 import { JobService } from '../services/job.service';
 import { GenericJob } from '../services/models/generic-job';
 import { jsonValidator } from '../utils/json-validator';
@@ -13,10 +17,10 @@ export class GenericJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind','endTime', 'operation', 'logs', 'history'];
+  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind','endTime', 'operation', 'logs', 'history', 'runNow'];
   jobCreatorForm : FormGroup;
   availableJobs : GenericJob[] = [];
-  constructor(private fb: FormBuilder, private jobService : JobService) { 
+  constructor(private fb: FormBuilder, private jobService : JobService, private snackBar : MatSnackBar, private dialog: MatDialog) { 
     this.jobCreatorForm = this.fb.group({
       name : new FormControl("", [Validators.required]),
       urgent : new FormControl(""),
@@ -56,11 +60,17 @@ export class GenericJobsComponent implements OnInit {
   }
 
   delete(jobId : string) {
-    this.jobService.deleteGenericJob(jobId).subscribe(response=> {
-      if(response && response.status == 200) {
-        this.getGenericJob();
+    let diaRef = this.dialog.open(ConfirmJobDeleteComponent);
+    diaRef.afterClosed().subscribe(result=> {
+      if(result) {
+        this.jobService.deleteGenericJob(jobId).subscribe(response=> {
+          if(response && response.status == 200) {
+            this.getGenericJob();
+          }
+        })
       }
-    })
+    });
+    
   }
 
   createJob(job : any, form : FormGroup) {
@@ -68,12 +78,31 @@ export class GenericJobsComponent implements OnInit {
     this.jobService.createGenericJob(job).subscribe(response => {
       if(response && response.body) {        
         this.availableJobs.push(response.body);
+        this.snackBar.open("Job Created", "close");
       }
+    }, e=> {
+      this.snackBar.open("Failed to create job", "close");
     });
   }
 
   refresh() {
     this.getGenericJob();
+  }
+
+  runJob(jobId : string) {
+    let diaRef = this.dialog.open(ConfirmJobRunComponent);
+    diaRef.afterClosed().subscribe(result=> {
+      if(result) {
+        this.jobService.runGenericJob(jobId).subscribe(r=> {
+          if(r && r.body) {
+            this.getGenericJob();
+            this.snackBar.open("Job started", "close");
+          }
+        }, e=>{
+          this.snackBar.open("Failed to start job", "close");
+        })
+      }
+    })
   }
 
 }

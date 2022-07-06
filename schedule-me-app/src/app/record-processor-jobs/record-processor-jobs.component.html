@@ -96,7 +96,7 @@
     </th>
 
     <td mat-cell *matCellDef="let element"> 
-        <div *ngIf="column!='operation' && column!='log' && column!='audit';else showOperation">
+        <div *ngIf="column!='operation' && column!='log' && column!='audit' && column!='runNow';else showOperation">
             {{element[column] | time}} 
         </div>
         <ng-template #showOperation>            
@@ -120,6 +120,14 @@
                         history
                     </span>
                 </a>
+            </div>
+
+            <div *ngIf="column == 'runNow'">
+                <div>
+                    <span class="material-symbols-outlined" style="cursor: pointer;" (click)="runJob(element.jobId)">
+                        play_circle
+                    </span>
+                </div>
             </div>
         </ng-template>    
     </td>

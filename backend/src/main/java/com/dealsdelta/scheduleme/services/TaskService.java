@@ -5,8 +5,10 @@ import com.dealsdelta.scheduleme.data.dao.*;
 import com.dealsdelta.scheduleme.data.models.*;
 import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.*;
+import com.dealsdelta.scheduleme.executors.JobProcessorExecutorService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -55,6 +57,7 @@ public class TaskService {
 
     @Autowired
     private JobAuditDao jobAuditDao;
+
 
 
     public List<IJob> getJobs(String status) {
@@ -396,5 +399,108 @@ public class TaskService {
         Calendar c1 = Calendar.getInstance();
         c1.add(Calendar.DATE, 1);
         return jobAuditDao.getJobFailedByDay(c.getTime(), c1.getTime());
+    }
+
+    public DailyJob runDailyJob(String jobId) {
+        DailyJob model = dailyJobDao.getDailyJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = dailyJobDao.update((DailyJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public MonthlyJob runMonthlyJob(String jobId) {
+        MonthlyJob model = monthlyJobDao.getMonthlyJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = monthlyJobDao.update((MonthlyJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public HourlyJob runHourlyJob(String jobId) {
+        HourlyJob model = hourlyJobDao.getHourlyJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = hourlyJobDao.update((HourlyJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public GenericJob runGenericJob(String jobId) {
+        GenericJob model = genericJobDao.getGenericJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = genericJobDao.update((GenericJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public RecordProcessorJob runRecordProcessorJob(String jobId) {
+        RecordProcessorJob model = recordProcessorJobDao.getRecordProcessorJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = recordProcessorJobDao.update((RecordProcessorJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public RecordProcessorDailyJob runRecordProcessorDailyJob(String jobId) {
+        RecordProcessorDailyJob model = recordProcessorDailyJobDao.getRecordProcessorDailyJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = recordProcessorDailyJobDao.update((RecordProcessorDailyJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public RecordProcessorHourlyJob runRecordProcessorHourlyJob(String jobId) {
+        RecordProcessorHourlyJob model = recordProcessorHourlyJobDao.getRecordProcessorHourlyJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = recordProcessorHourlyJobDao.update((RecordProcessorHourlyJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    public RecordProcessorMonthlyJob runRecordProcessorMonthlyJob(String jobId) {
+        RecordProcessorMonthlyJob model = recordProcessorMonthlyJobDao.getRecordProcessorMonthlyJob(jobId);
+        model.setStatus(IJob.JOB_STATUS.DUE.toString());
+        RunningJobModel runningJobModel = new RunningJobModel();
+        runningJobModel.setJob(model);
+        runningJobModel.setJobId(jobId);
+        runningJobDao.create(runningJobModel);
+        model = recordProcessorMonthlyJobDao.update((RecordProcessorMonthlyJobModel) model);
+        runExecutor();
+        return model;
+    }
+
+    @Autowired
+    ConfigurableApplicationContext configurableApplicationContext;
+    private void runExecutor() {
+        JobProcessorExecutorService jobProcessorExecutorService = configurableApplicationContext.getBean(JobProcessorExecutorService.class);
+        new Thread(() -> jobProcessorExecutorService.start()).start();
     }
 }

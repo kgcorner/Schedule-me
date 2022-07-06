@@ -42,6 +42,11 @@ public class JobResource {
         return service.getDailyJobs();
     }
 
+    @PutMapping("/daily-jobs/{jobId}")
+    public DailyJob runDailyJob(@PathVariable("jobId") String jobId) {
+        return service.runDailyJob(jobId);
+    }
+
     @DeleteMapping("/daily-jobs/{jobId}")
     public void deleteDailyJobs(@PathVariable("jobId") String jobId) {
         service.deleteDailyJob(jobId);
@@ -62,6 +67,11 @@ public class JobResource {
         service.deleteHourlyJob(jobId);
     }
 
+    @PutMapping("/hourly-jobs/{jobId}")
+    public HourlyJob runHourlyJob(@PathVariable("jobId") String jobId) {
+        return service.runHourlyJob(jobId);
+    }
+
     @PostMapping("/monthly-jobs")
     public MonthlyJob createMonthly(@RequestBody MonthlyJob job) {
         return service.createMonthlyJob(job);
@@ -75,6 +85,11 @@ public class JobResource {
     @DeleteMapping("/monthly-jobs/{jobId}")
     public void deleteMonthlyJobs(@PathVariable("jobId") String jobId) {
         service.deleteMonthlyJob(jobId);
+    }
+
+    @PutMapping("/monthly-jobs/{jobId}")
+    public MonthlyJob runMonthlyJob(@PathVariable("jobId") String jobId) {
+        return service.runMonthlyJob(jobId);
     }
 
     @PostMapping("/record-processor-jobs")
@@ -92,6 +107,11 @@ public class JobResource {
         service.deleteRecordProcessorJob(jobId);
     }
 
+    @PutMapping("/record-processor-jobs/{jobId}")
+    public RecordProcessorJob runRecordProcessorJob(@PathVariable("jobId") String jobId) {
+        return service.runRecordProcessorJob(jobId);
+    }
+
     @PostMapping("/generic-jobs")
     public GenericJob createDailyJob(@RequestBody GenericJob job) {
         return service.createGenericJob(job);
@@ -107,6 +127,12 @@ public class JobResource {
         service.deleteGenericJob(jobId);
     }
 
+    @PutMapping("/generic-jobs/{jobId}")
+    public GenericJob runGenericJob(@PathVariable("jobId") String jobId) {
+        return service.runGenericJob(jobId);
+    }
+
+
     @PostMapping("/record-processor-daily-jobs")
     public RecordProcessorDailyJob createRecordProcessorDailyJobs(@RequestBody RecordProcessorDailyJob job) {
         return service.createRecordProcessorHourlyJob(job);
@@ -120,6 +146,11 @@ public class JobResource {
     @DeleteMapping("/record-processor-daily-jobs/{jobId}")
     public void deleteRecordProcessorDailyJobs(@PathVariable("jobId") String jobId) {
         service.deleteRecordProcessorDailyJob(jobId);
+    }
+
+    @PutMapping("/record-processor-daily-jobs/{jobId}")
+    public RecordProcessorDailyJob runRecordProcessorDailyJob(@PathVariable("jobId") String jobId) {
+        return service.runRecordProcessorDailyJob(jobId);
     }
 
     @PostMapping("/record-processor-monthly-jobs")
@@ -137,6 +168,11 @@ public class JobResource {
         service.deleteRecordProcessorMonthlyJob(jobId);
     }
 
+    @PutMapping("/record-processor-monthly-jobs/{jobId}")
+    public RecordProcessorMonthlyJob runRecordProcessorMonthlyJob(@PathVariable("jobId") String jobId) {
+        return service.runRecordProcessorMonthlyJob(jobId);
+    }
+
     @PostMapping("/record-processor-hourly-jobs")
     public RecordProcessorHourlyJob createRecordProcessorHourlyJob(@RequestBody RecordProcessorHourlyJob job) {
         return service.createRecordProcessorHourlyJob(job);
@@ -150,6 +186,11 @@ public class JobResource {
     @DeleteMapping("/record-processor-hourly-jobs/{jobId}")
     public void deleteRecordProcessorHourlyJobs(@PathVariable("jobId") String jobId) {
         service.deleteRecordProcessorHourlyJob(jobId);
+    }
+
+    @PutMapping("/record-processor-hourly-jobs/{jobId}")
+    public RecordProcessorHourlyJob runRecordProcessorHourlyJob(@PathVariable("jobId") String jobId) {
+        return service.runRecordProcessorHourlyJob(jobId);
     }
 
     @GetMapping("/jobs/{jobId}/logs")

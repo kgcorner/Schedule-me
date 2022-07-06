@@ -150,6 +150,17 @@
             </td>
         </ng-container>
 
+        <ng-container matColumnDef="runNow">
+            <th mat-header-cell *matHeaderCellDef> Run Now </th>
+            <td mat-cell *matCellDef="let element"> 
+                <div>
+                    <span class="material-symbols-outlined" style="cursor: pointer;" (click)="runJob(element.jobId)">
+                        play_circle
+                    </span>
+                </div>                
+            </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
