@@ -55,12 +55,12 @@ public class JobRunner implements Runnable {
 
     private void updateJobStatus(IJob job, String status) {
         if(job instanceof DailyJobModel) {
-            ((DailyJobModel) job).setStatus(status);
+            job.setStatus(status);
             taskService.getDailyJobDao().update((DailyJobModel) job);
         }
 
         if(job instanceof GenericJobModel) {
-            ((GenericJobModel) job).setStatus(status);
+            job.setStatus(status);
             if(status.equalsIgnoreCase("COMPLETED")) {
                 ((GenericJobModel) job).setEndTime(LocalTime.now());
             }
@@ -69,7 +69,7 @@ public class JobRunner implements Runnable {
 
         if(job instanceof HourlyJobModel) {
             if(status.equalsIgnoreCase("COMPLETED")) {
-                ((HourlyJobModel) job).setStatus("DUE");
+                job.setStatus("DUE");
                 long frequency = ((HourlyJob) job).getRepeatFrequencyInMinutes();
                 ((HourlyJobModel) job).setStartTime(job.getStartTime().plus(frequency, ChronoUnit.MINUTES));
             } else {
@@ -84,12 +84,12 @@ public class JobRunner implements Runnable {
         }
 
         if(job instanceof RecordProcessorDailyJobModel) {
-            ((RecordProcessorDailyJobModel) job).setStatus(status);
+            job.setStatus(status);
             taskService.getRecordProcessorDailyJobDao().update((RecordProcessorDailyJobModel) job);
         }
 
         if(job instanceof RecordProcessorJobModel) {
-            ((RecordProcessorJobModel) job).setStatus(status);
+            job.setStatus(status);
             if(status.equalsIgnoreCase("COMPLETED")) {
                 ((RecordProcessorJobModel) job).setEndTime(LocalTime.now());
             }
@@ -97,15 +97,15 @@ public class JobRunner implements Runnable {
         }
 
         if(job instanceof RecordProcessorMonthlyJobModel) {
-            ((RecordProcessorMonthlyJobModel) job).setStatus(status);
+            job.setStatus(status);
             taskService.getRecordProcessorMonthlyJobDao().update((RecordProcessorMonthlyJobModel) job);
         }
 
         if(job instanceof RecordProcessorHourlyJobModel) {
             if(status.equalsIgnoreCase("COMPLETED")) {
-                ((HourlyJobModel) job).setStatus("DUE");
+                job.setStatus("DUE");
                 long frequency = ((HourlyJob) job).getRepeatFrequencyInMinutes();
-                ((HourlyJobModel) job).setStartTime(job.getStartTime().plus(frequency, ChronoUnit.MINUTES));
+                ((RecordProcessorHourlyJobModel) job).setStartTime(job.getStartTime().plus(frequency, ChronoUnit.MINUTES));
             } else {
                 job.setStatus(status);
             }

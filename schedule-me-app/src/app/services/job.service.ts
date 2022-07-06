@@ -4,6 +4,7 @@ import { HttpService } from './http.service';
 import { DailyJob } from './models/daily-job';
 import { GenericJob } from './models/generic-job';
 import { HourlyJob } from './models/hourly-job';
+import { Log } from './models/log';
 import { MonthlyJob } from './models/monthly-job';
 import { RecordProcessorDailyJob } from './models/record-processor-daily-job';
 import { RecordProcessorHourlyJob } from './models/record-processor-hourly-job';
@@ -14,6 +15,7 @@ import { RecordProcessorMonthlyJob } from './models/record-processor-monthly-job
   providedIn: 'root'
 })
 export class JobService {
+  
 
   private DAILY_JOBS =  "/daily-jobs";
   private MONTHLY_JOBS =  "/monthly-jobs";
@@ -23,6 +25,7 @@ export class JobService {
   private RECORD_PROCESSOR_HOURLY_JOBS =  "/record-processor-hourly-jobs";
   private RECORD_PROCESSOR_JOBS =  "/record-processor-jobs";
   private GENERIC_JOBS =  "/generic-jobs";
+  private JOB_LOGS =  "/jobs/{1}/logs";
 
   constructor(private http : HttpService) { }
 
@@ -131,5 +134,8 @@ export class JobService {
   deleteGenericJob(jobId : string) {
     return this.http.doDelete(environment.host + this.GENERIC_JOBS+"/"+jobId, null);
   }
-  
+
+  getJobLogs(jobId: string) {
+    return this.http.doGet<Log[]>(environment.host + this.JOB_LOGS.replace("{1}", jobId), null);
+  }
 }

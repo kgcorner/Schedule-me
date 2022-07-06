@@ -3,12 +3,14 @@ package com.dealsdelta.scheduleme.services;
 
 import com.dealsdelta.scheduleme.data.dao.*;
 import com.dealsdelta.scheduleme.data.models.*;
+import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -66,19 +68,19 @@ public class TaskService {
         return null;
     }
 
-    public RecordProcessorHourlyJob createRecordProcessingHourlyJob(RecordProcessorHourlyJob job) {
+    public RecordProcessorHourlyJob createRecordProcessorHourlyJob(RecordProcessorHourlyJob job) {
         RecordProcessorHourlyJobModel model = new RecordProcessorHourlyJobModel();
         BeanUtils.copyProperties(job, model);
         return recordProcessorHourlyJobDao.create(model);
     }
 
-    public RecordProcessorDailyJob createRecordProcessingHourlyJob(RecordProcessorDailyJob job) {
+    public RecordProcessorDailyJob createRecordProcessorHourlyJob(RecordProcessorDailyJob job) {
         RecordProcessorDailyJobModel model = new RecordProcessorDailyJobModel();
         BeanUtils.copyProperties(job, model);
         return recordProcessorDailyJobDao.create(model);
     }
 
-    public RecordProcessorMonthlyJob createRecordProcessingHourlyJob(RecordProcessorMonthlyJob job) {
+    public RecordProcessorMonthlyJob createRecordProcessorHourlyJob(RecordProcessorMonthlyJob job) {
         RecordProcessorMonthlyJobModel model = new RecordProcessorMonthlyJobModel();
         BeanUtils.copyProperties(job, model);
         return recordProcessorMonthlyJobDao.create(model);
@@ -273,5 +275,17 @@ public class TaskService {
 
     public void deleteRecordProcessorHourlyJob(String jobId) {
         recordProcessorHourlyJobDao.delete((RecordProcessorHourlyJobModel) recordProcessorHourlyJobDao.getRecordProcessorHourlyJob(jobId));
+    }
+
+    public List<Log> getLogs(String jobId, int page, int count) {
+        List<Operation> operations = new ArrayList<>();
+        Operation operation = new Operation(jobId, Operation.TYPES.STRING, "jobId", Operation.OPERATORS.EQ);
+        operations.add(operation);
+        List<Log> logs = new ArrayList<>();
+        List<LogModel> models = logDao.getAllBy(operations, page, count);
+        for(LogModel model : models) {
+            logs.add(model);
+        }
+        return logs;
     }
 }

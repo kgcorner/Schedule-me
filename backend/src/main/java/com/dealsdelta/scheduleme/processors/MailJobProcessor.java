@@ -62,6 +62,7 @@ public class MailJobProcessor implements JobProcessor {
         } else {
             logService.write(job, Log.ERROR, "Invalid Job param found. No email or emails attached",
                 "MailJobProcessor");
+            throw new IllegalArgumentException("Invalid Job param found. No email or emails attached");
         }
 
     }

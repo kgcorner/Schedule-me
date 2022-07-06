@@ -33,6 +33,7 @@ import {MatRadioModule} from '@angular/material/radio';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TimePipe } from './pips/time.pipe';
+import { JobLogsComponent } from './job-logs/job-logs.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +48,8 @@ import { TimePipe } from './pips/time.pipe';
     RecordProcessorDailyJobsComponent,
     RecordProcessorHourlyJobsComponent,
     RecordProcessorMonthlyJobsComponent,
-    TimePipe
+    TimePipe,
+    JobLogsComponent
   ],
   imports: [
     BrowserModule,

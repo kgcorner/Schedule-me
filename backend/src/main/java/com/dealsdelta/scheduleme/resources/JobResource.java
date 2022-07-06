@@ -105,9 +105,9 @@ public class JobResource {
         service.deleteGenericJob(jobId);
     }
 
-    @PostMapping("/record-processing-daily-job")
-    public RecordProcessorDailyJob createRecordProcessingHourlyJob(@RequestBody RecordProcessorDailyJob job) {
-        return service.createRecordProcessingHourlyJob(job);
+    @PostMapping("/record-processor-daily-jobs")
+    public RecordProcessorDailyJob createRecordProcessorDailyJobs(@RequestBody RecordProcessorDailyJob job) {
+        return service.createRecordProcessorHourlyJob(job);
     }
 
     @GetMapping("/record-processor-daily-jobs")
@@ -120,9 +120,9 @@ public class JobResource {
         service.deleteRecordProcessorDailyJob(jobId);
     }
 
-    @PostMapping("/record-processing-monthly-job")
-    public RecordProcessorMonthlyJob createRecordProcessingMonthlyJob(@RequestBody RecordProcessorMonthlyJob job) {
-        return service.createRecordProcessingHourlyJob(job);
+    @PostMapping("/record-processor-monthly-jobs")
+    public RecordProcessorMonthlyJob createRecordProcessorMonthlyJob(@RequestBody RecordProcessorMonthlyJob job) {
+        return service.createRecordProcessorHourlyJob(job);
     }
 
     @GetMapping("/record-processor-monthly-jobs")
@@ -135,9 +135,9 @@ public class JobResource {
         service.deleteRecordProcessorMonthlyJob(jobId);
     }
 
-    @PostMapping("/record-processing-hourly-job")
-    public RecordProcessorHourlyJob createRecordProcessingHourlyJob(@RequestBody RecordProcessorHourlyJob job) {
-        return service.createRecordProcessingHourlyJob(job);
+    @PostMapping("/record-processor-hourly-jobs")
+    public RecordProcessorHourlyJob createRecordProcessorHourlyJob(@RequestBody RecordProcessorHourlyJob job) {
+        return service.createRecordProcessorHourlyJob(job);
     }
 
     @GetMapping("/record-processor-hourly-jobs")
@@ -149,6 +149,14 @@ public class JobResource {
     public void deleteRecordProcessorHourlyJobs(@PathVariable("jobId") String jobId) {
         service.deleteRecordProcessorHourlyJob(jobId);
     }
+
+    @GetMapping("/jobs/{jobId}/logs")
+    public List<Log> getJobLogs(@PathVariable String jobId, @RequestParam(name = "page", defaultValue = "0") int page,
+                                     @RequestParam(name = "count", defaultValue = "1000") int count) {
+        return service.getLogs(jobId, page, count);
+    }
+
+
 
 
 

@@ -13,7 +13,7 @@ export class MonthlyJobsComponent implements OnInit {
 
   jobParam : string = "";
   jobDataSource : any[] = [];
-  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind', 'operation'];
+  displayedColumns: string[] = ['jobName', 'startTime', 'status', 'jobKind','dayOfMonth', 'operation', 'logs'];
   jobCreatorForm : FormGroup;
   availableJobs : MonthlyJob[] = [];
   constructor(private fb: FormBuilder, private jobService : JobService) { 

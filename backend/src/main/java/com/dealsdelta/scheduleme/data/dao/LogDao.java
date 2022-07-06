@@ -1,8 +1,10 @@
 package com.dealsdelta.scheduleme.data.dao;
 
 
+import com.dealsdelta.scheduleme.data.models.DailyJobModel;
 import com.dealsdelta.scheduleme.data.models.LogModel;
 import com.dealsdelta.scheduleme.data.repo.JobRepo;
+import com.dealsdelta.scheduleme.data.repo.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,5 +46,9 @@ public class LogDao {
 
     public LogModel getLogModelByKey(String key, String value) {
         return jobRepo.getByKey(key, value, LogModel.class);
+    }
+
+    public List<LogModel> getAllBy(List<Operation> operations, int page, int count) {
+        return jobRepo.getAll(operations, page, count, LogModel.class);
     }
 }

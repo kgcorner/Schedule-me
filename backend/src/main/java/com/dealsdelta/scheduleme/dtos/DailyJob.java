@@ -11,8 +11,6 @@ import java.util.List;
  * Author: kumar
  * Created on : 24/06/22
  */
-
-@JsonDeserialize(using = DailyJobDeserializer.class)
 public class DailyJob extends RepeatableJob {
 
     @Override

@@ -87,8 +87,8 @@
             {{column}} 
         </div>
         <ng-template #showRefresh>
-            <div style="cursor: pointer;" (click)="refresh()">
-                    <span class="material-symbols-outlined">
+            <div >
+                    <span class="material-symbols-outlined" style="cursor: pointer;" (click)="refresh()">
                         refresh
                     </span>
                 </div>
@@ -100,7 +100,7 @@
             {{element[column] | time}} 
         </div>
         <ng-template #showOperation>
-            <div style="cursor: pointer;" (click)="delete(element.jobId)"><span class="material-symbols-outlined">
+            <div ><span class="material-symbols-outlined" style="cursor: pointer;" (click)="delete(element.jobId)">
                 delete
                 </span>
             </div>

@@ -1,0 +1,56 @@
+<div class="container" style="padding:15px" *ngIf="logs.length > 0">
+    <h2>Logs for job : {{name}}</h2>
+
+    <table mat-table [dataSource]="filteredLogs" class="mat-elevation-z8">
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="module">
+            <th mat-header-cell *matHeaderCellDef> Module </th>
+            <td mat-cell *matCellDef="let element"> {{element.module}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="level">
+            <th mat-header-cell *matHeaderCellDef> Level </th>
+            <td mat-cell *matCellDef="let element"> {{element.level}} </td>
+        </ng-container>
+        
+        <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef> Message </th>
+            <td mat-cell *matCellDef="let element"> {{element.message}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="filter">
+            <th mat-header-cell *matHeaderCellDef> 
+                <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                    <span class="material-symbols-outlined">
+                        filter_alt
+                        </span>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <button mat-menu-item (click)="filter('VERBOSE')">
+                      <span>VERBOSE</span>
+                    </button>
+                    <button mat-menu-item (click)="filter('INFO')">
+                      <span>INFO</span>
+                    </button>
+                    <button mat-menu-item (click)="filter('WARN')">
+                      <span>WARN</span>
+                    </button>
+                    <button mat-menu-item (click)="filter('ERROR')">
+                      <span>ERROR</span>
+                    </button>
+                    <button mat-menu-item (click)="filter('ALL')">
+                      <span>ALL</span>
+                    </button>
+                  </mat-menu>
+            </th>
+            <td mat-cell *matCellDef="let element"> </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</div>
