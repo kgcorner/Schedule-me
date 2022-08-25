@@ -43,7 +43,8 @@ e2e/*.map
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
-
+*.iml
+**/*.iml
 # AWS User-specific
 .idea/**/aws.xml
 
