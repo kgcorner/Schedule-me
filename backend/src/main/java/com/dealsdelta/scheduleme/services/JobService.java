@@ -2,9 +2,16 @@ package com.dealsdelta.scheduleme.services;
 
 
 import com.dealsdelta.scheduleme.data.dao.JobDao;
+import com.dealsdelta.scheduleme.data.models.JobModel;
+import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.Job;
+import com.dealsdelta.scheduleme.dtos.RUN_FREQUENCY;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Description : <Write class Description>
@@ -17,6 +24,129 @@ public class JobService {
 
     @Autowired
     private JobDao jobDao;
+
+    /**
+     * Creates given job
+     * @param job
+     * @return
+     */
+    public Job createJob(Job job) {
+        validateJob(job);
+        JobModel model = new JobModel();
+        BeanUtils.copyProperties(job, model);
+        return jobDao.create(model);
+    }
+
+    /**
+     * Updates the given job
+     * @param job
+     */
+    public Job updateJob(Job job) {
+        validateJob(job);
+        JobModel model = jobDao.get(job.getJobId(), JobModel.class);
+        if(model == null)
+            throw new IllegalArgumentException("No such job exists");
+        BeanUtils.copyProperties(job, model);
+        job = jobDao.update(model);
+        return job;
+    }
+
+    /**
+     * Deletes the given job
+     * @param jobId
+     */
+    public void removeJob(String jobId) {
+        JobModel model = jobDao.get(jobId, JobModel.class);
+        if(model == null)
+            throw new IllegalArgumentException("No such job exists");
+        jobDao.delete(model);
+    }
+
+    /**
+     * Returns a job of given Id
+     * @param jobId
+     * @return
+     */
+    public Job getJob(String jobId) {
+        return jobDao.get(jobId, JobModel.class);
+    }
+
+    /**
+     * returns count of all existing jobs
+     * @return
+     */
+    public long getAllJobCount() {
+        return jobDao.getCount(JobModel.class);
+    }
+
+    /**
+     * returns list of all jobs runs only once or manually whenever required
+     * @return
+     */
+    public List<Job> getRunOnceJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.ONCE);
+    }
+
+    /**
+     * returns list of all daily jobs
+     * @return
+     */
+    public List<Job> getDailyJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.DAILY);
+    }
+
+    /**
+     * returns list of all Weekly jobs
+     * @return
+     */
+    public List<Job> getWeeklyJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.WEEKLY);
+    }
+
+    /**
+     * returns list of all Weekly jobs that runs multiple times in a week
+     * @return
+     */
+    public List<Job> getNWeeklyJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.N_WEEKLY);
+    }
+
+    /**
+     * returns list of all Monthly jobs
+     * @return
+     */
+    public List<Job> getMonthlyJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.MONTHLY);
+    }
+
+    /**
+     * returns list of all Monthly jobs multiple times in a month
+     * @return
+     */
+    public List<Job> getNMonthlyJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.N_MONTHLY);
+    }
+
+    /**
+     * Returns all jobs that runs on last day of the month
+     * @return
+     */
+    public List<Job> getLastDayOfMonthJobs() {
+        return getJobsByFrequency(RUN_FREQUENCY.LAST_DAY_OF_MONTH);
+    }
+
+    private List<Job> getJobsByFrequency(RUN_FREQUENCY frequency) {
+        Operation operation = new Operation(frequency, RUN_FREQUENCY.class,
+            "frequency", Operation.OPERATORS.EQ);
+        List<Operation> operations = new ArrayList<>();
+        operations.add(operation);
+        List<JobModel> models = jobDao.getAllByKey(operations, JobModel.class);
+        List<Job> jobs = new ArrayList<>();
+        for(JobModel model : models) {
+            jobs.add(model);
+        }
+        return jobs;
+    }
 
     public void validateJob(Job job) {
         if(job.getStartTime() == null) {
