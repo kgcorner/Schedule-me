@@ -1,12 +1,25 @@
 package com.dealsdelta.scheduleme.services;
 
+import com.dealsdelta.scheduleme.data.dao.JobDao;
+import com.dealsdelta.scheduleme.data.models.JobModel;
+import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.Job;
 import com.dealsdelta.scheduleme.dtos.RUN_FREQUENCY;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.reflect.Whitebox;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 
 /**
@@ -20,11 +33,26 @@ class JobServiceTest {
 
     private Job job;
     private JobService jobService;
+    private JobDao jobDao;
 
     @BeforeEach
     void setUp() {
         job = new Job();
+        job.setFrequency(RUN_FREQUENCY.ONCE);
         jobService = new JobService();
+        jobDao = PowerMockito.mock(JobDao.class);
+        Whitebox.setInternalState(jobService,  "jobDao", jobDao);
+    }
+    
+    @Test
+    void createJob() {
+        Job job = new Job();
+        job.setStartTime(LocalTime.now());
+        job.setFrequency(RUN_FREQUENCY.ONCE);
+        JobModel model = new JobModel();
+        when(jobDao.create(any(JobModel.class))).thenReturn(model);
+        Job result = jobService.createJob(job);
+        assertEquals(model, result);
     }
 
     @Test
@@ -40,9 +68,10 @@ class JobServiceTest {
     @Test
     void testNoJobFrequency() {
         try {
+            Job job = new Job();
             job.setStartTime(LocalTime.now());
             jobService.validateJob(job);
-            Assertions.fail("Job with no start time is processed");
+            Assertions.fail("Job with no frequency is processed");
         } catch (IllegalArgumentException x) {
             Assertions.assertEquals( "job must have a job frequency", x.getMessage());
         }
@@ -355,5 +384,151 @@ class JobServiceTest {
         job.setDaysOfWeek(null);
         job.setDayOfMonth(10);
         jobService.validateJob(job);
+    }
+
+    @Test
+    void updateJob() {
+        String jobId = "existingJobId";
+        job.setJobId(jobId);
+        JobModel model = new JobModel();
+        model.setJobName("Updated value");
+        job.setStartTime(LocalTime.now());
+        when(jobDao.get(jobId, JobModel.class)).thenReturn(model);
+        when(jobDao.update(any(JobModel.class))).thenReturn(model);
+        Job result = jobService.updateJob(job);
+        assertEquals(model.getJobName(), result.getJobName());
+    }
+
+    @Test
+    void updateInvalidJob() {
+        String jobId = "nonExistingJobId";
+        job.setJobId(jobId);
+        JobModel model = new JobModel();
+        model.setJobName("Updated value");
+        job.setStartTime(LocalTime.now());
+        when(jobDao.get(jobId, JobModel.class)).thenReturn(null);
+        try {
+            jobService.updateJob(job);
+        } catch (IllegalArgumentException x) {
+            String error = "No such job exists";
+            assertEquals(error, x.getMessage());
+        }
+    }
+
+    @Test
+    void removeJob() {
+        String jobId = "existingJob";
+        JobModel model = new JobModel();
+        when(jobDao.get(jobId, JobModel.class)).thenReturn(model);
+        jobService.removeJob(jobId);
+    }
+
+    @Test
+    void removeJobInvalidId() {
+        String jobId = "nonExistingJob";
+        when(jobDao.get(jobId, JobModel.class)).thenReturn(null);
+        try {
+            jobService.removeJob(jobId);
+        } catch (IllegalArgumentException x) {
+            String error = "No such job exists";
+            assertEquals(error, x.getMessage());
+        }
+    }
+
+    @Test
+    void getJob() {
+        String jobId = "existingJob";
+        JobModel model = new JobModel();
+        model.setJobId(jobId);
+        when(jobDao.get(jobId, JobModel.class)).thenReturn(model);
+        Job result = jobService.getJob(jobId);
+        assertEquals(jobId, result.getJobId());
+    }
+
+    @Test
+    void getAllJobCount() {
+        long count = 10;
+        when(jobDao.getCount(JobModel.class)).thenReturn(count);
+        long result = jobService.getAllJobCount();
+        assertEquals(count, result);
+    }
+
+    private List<Operation> getFrequencyOperation(RUN_FREQUENCY frequency) {
+        Operation operation = new Operation(frequency, RUN_FREQUENCY.class,
+            "frequency", Operation.OPERATORS.EQ);
+        List<Operation> operations = new ArrayList<>();
+        operations.add(operation);
+        return operations;
+
+    }
+
+    @Test
+    void getRunOnceJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.ONCE);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getRunOnceJobs();
+        assertEquals(models.size(), result.size());
+    }
+
+    private List<JobModel> prepareJobModels() {
+        List<JobModel> models = new ArrayList<>();
+        for(int i = 0; i < 10; i++)
+            models.add(new JobModel());
+        return models;
+    }
+
+    @Test
+    void getDailyJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.DAILY);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getDailyJobs();
+        assertEquals(models.size(), result.size());
+    }
+
+    @Test
+    void getWeeklyJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.WEEKLY);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getWeeklyJobs();
+        assertEquals(models.size(), result.size());
+    }
+
+    @Test
+    void getNWeeklyJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.N_WEEKLY);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getNWeeklyJobs();
+        assertEquals(models.size(), result.size());
+    }
+
+    @Test
+    void getMonthlyJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.MONTHLY);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getMonthlyJobs();
+        assertEquals(models.size(), result.size());
+    }
+
+    @Test
+    void getNMonthlyJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.N_MONTHLY);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getNMonthlyJobs();
+        assertEquals(models.size(), result.size());
+    }
+
+    @Test
+    void getLastDayOfMonthJobs() {
+        List<JobModel> models = prepareJobModels();
+        List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.LAST_DAY_OF_MONTH);
+        when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
+        List<Job> result = jobService.getLastDayOfMonthJobs();
+        assertEquals(models.size(), result.size());
     }
 }
