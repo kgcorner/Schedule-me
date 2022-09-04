@@ -1,7 +1,7 @@
 package com.dealsdelta.scheduleme.data.repo;
 
 
-import com.dealsdelta.scheduleme.util.GeneratedCode;
+import com.dealsdelta.scheduleme.util.ExcludeFromJacocoGeneratedReport;
 
 import javax.persistence.ParameterMode;
 import java.util.Objects;
@@ -195,7 +195,7 @@ public class Operation {
     }
 
     @Override
-    @GeneratedCode
+    @ExcludeFromJacocoGeneratedReport
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -211,6 +211,7 @@ public class Operation {
     }
 
     @Override
+    @ExcludeFromJacocoGeneratedReport
     public int hashCode() {
         return Objects.hash(classType, mode, orWithPrevious, value, type, name, operator, dynamicParamName);
     }
