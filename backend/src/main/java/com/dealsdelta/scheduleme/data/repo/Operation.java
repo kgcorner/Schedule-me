@@ -1,7 +1,10 @@
 package com.dealsdelta.scheduleme.data.repo;
 
 
+import com.dealsdelta.scheduleme.util.GeneratedCode;
+
 import javax.persistence.ParameterMode;
+import java.util.Objects;
 
 /**
  * Description : <Write class Description>
@@ -189,5 +192,26 @@ public class Operation {
 
     public void setDynamicParamName(String dynamicParamName) {
         this.dynamicParamName = dynamicParamName;
+    }
+
+    @Override
+    @GeneratedCode
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Operation operation = (Operation) o;
+        return orWithPrevious == operation.orWithPrevious &&
+            classType.equals(operation.classType) &&
+            mode == operation.mode &&
+            value.equals(operation.value) &&
+            type == operation.type &&
+            name.equals(operation.name) &&
+            operator == operation.operator &&
+            Objects.equals(dynamicParamName, operation.dynamicParamName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(classType, mode, orWithPrevious, value, type, name, operator, dynamicParamName);
     }
 }
