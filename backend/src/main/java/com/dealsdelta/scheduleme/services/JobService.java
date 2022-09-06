@@ -1,7 +1,10 @@
 package com.dealsdelta.scheduleme.services;
 
 
+import com.dealsdelta.scheduleme.data.dao.JobAuditDao;
 import com.dealsdelta.scheduleme.data.dao.JobDao;
+import com.dealsdelta.scheduleme.data.dao.LogDao;
+import com.dealsdelta.scheduleme.data.dao.RunningJobDao;
 import com.dealsdelta.scheduleme.data.models.JobModel;
 import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.Job;
@@ -24,6 +27,18 @@ public class JobService {
 
     @Autowired
     private JobDao jobDao;
+
+    @Autowired
+    private LogDao logDao;
+
+    @Autowired
+    private LogService logService;
+
+    @Autowired
+    private RunningJobDao runningJobDao;
+
+    @Autowired
+    private JobAuditDao jobAuditDao;
 
     /**
      * Creates given job
@@ -245,5 +260,25 @@ public class JobService {
                 throw new IllegalArgumentException("N_Monthly jobs must have days of week between 1-31");
             }
         }
+    }
+
+    public LogDao getLogDao() {
+        return logDao;
+    }
+
+    public RunningJobDao getRunningJobDao() {
+        return runningJobDao;
+    }
+
+    public JobDao getJobDao() {
+        return jobDao;
+    }
+
+    public JobAuditDao getJobAuditDao() {
+        return jobAuditDao;
+    }
+
+    public LogService getLogService() {
+        return logService;
     }
 }
