@@ -5,11 +5,13 @@ import com.dealsdelta.scheduleme.data.dao.*;
 import com.dealsdelta.scheduleme.data.models.RunningJobModel;
 import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.IJob;
+import com.dealsdelta.scheduleme.dtos.JOB_STATUS;
 import com.dealsdelta.scheduleme.dtos.RecordProcessorMonthlyJob;
 import com.dealsdelta.scheduleme.dtos.RunningJob;
 import com.dealsdelta.scheduleme.processors.JobProcessor;
 import com.dealsdelta.scheduleme.processors.JobProcessorFactory;
 import com.dealsdelta.scheduleme.services.JobScannerService;
+import com.dealsdelta.scheduleme.services.JobService;
 import com.dealsdelta.scheduleme.services.LogService;
 import com.dealsdelta.scheduleme.services.TaskService;
 import org.apache.log4j.Logger;
@@ -35,37 +37,10 @@ public class JobProcessorExecutorService {
     private static final Object LOCK = new Object();
 
     @Autowired
-    private DailyJobDao dailyJobDao;
-
-    @Autowired
-    private MonthlyJobDao monthlyJobDao;
-
-    @Autowired
-    private HourlyJobDao hourlyJobDao;
-
-    @Autowired
-    private LogService logService;
-
-    @Autowired
-    private GenericJobDao genericJobDao;
-
-    @Autowired
-    private RecordProcessorDailyJobDao recordProcessorDailyJobDao;
-
-    @Autowired
-    private RecordProcessorMonthlyJobDao recordProcessorMonthlyJobDao;
-
-    @Autowired
-    private RecordProcessorHourlyJobDao recordProcessorHourlyJobDao;
-
-    @Autowired
-    private RecordProcessorJobDao recordProcessorJobDao;
-
-    @Autowired
     private RunningJobDao runningJobDao;
 
     @Autowired
-    private TaskService taskService;
+    private JobService jobService;
 
     @Value("${job.executor.pool.size}")
     int poolSize;
@@ -95,8 +70,8 @@ public class JobProcessorExecutorService {
             if(runningJobs.size() > 0) {
                 for(RunningJob runningJob : runningJobs) {
                     JobProcessor jobProcessor = JobProcessorFactory.getJobProcessor(runningJob.getJob());
-                    JobRunner runner = new JobRunner(runningJob, jobProcessor, taskService);
-                    runningJob.getJob().setStatus(IJob.JOB_STATUS.WAITING.toString());
+                    JobRunner runner = new JobRunner(runningJob, jobProcessor, jobService);
+                    runningJob.getRunningJob().setStatus(JOB_STATUS.WAITING);
                     runningJobDao.update((RunningJobModel)runningJob);
                     runJob(runner);
                 }

@@ -4,8 +4,8 @@ import com.dealsdelta.scheduleme.data.models.JobModel;
 import com.dealsdelta.scheduleme.data.repo.JobRepo;
 import com.dealsdelta.scheduleme.data.repo.Operation;
 import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
@@ -23,20 +23,20 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created on : 25/08/22
  */
 
-class GenericDaoTest {
+public class GenericDaoTest {
     private GenericDao<JobModel> jobModelDao;
     private JobRepo<JobModel> jobRepo;
     private static final String RANDOM_JOB_ID = "asjkdalsjdkjaskldjajskljda";
     private static final String RANDOM_JOB_NAME = "NAME";
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         jobModelDao = new GenericDao<>();
         jobRepo = PowerMockito.mock(JobRepo.class);
         Whitebox.setInternalState(jobModelDao, "jobRepo", jobRepo);
     }
 
     @Test
-    void create() {
+    public void create() {
         JobModel model = new JobModel();
         JobModel createdModel = new JobModel();
         createdModel.setJobId(RANDOM_JOB_ID);
@@ -46,7 +46,7 @@ class GenericDaoTest {
     }
 
     @Test
-    void update() {
+    public void update() {
         JobModel model = new JobModel();
         JobModel createdModel = new JobModel();
         createdModel.setJobId(RANDOM_JOB_ID);
@@ -56,14 +56,14 @@ class GenericDaoTest {
     }
 
     @Test
-    void delete() {
+    public void delete() {
         JobModel model = new JobModel();
         doNothing().when(jobRepo).remove(model);
         jobModelDao.delete(model);
     }
 
     @Test
-    void getAll() {
+    public void getAll() {
         List<JobModel> models = new ArrayList<>();
         models.add(new JobModel());
         models.add(new JobModel());
@@ -73,7 +73,7 @@ class GenericDaoTest {
     }
 
     @Test
-    void get() {
+    public void get() {
         JobModel model = new JobModel();
         model.setJobId(RANDOM_JOB_ID);
         when(jobRepo.getById(RANDOM_JOB_ID, JobModel.class)).thenReturn(model);
@@ -82,7 +82,7 @@ class GenericDaoTest {
     }
 
     @Test
-    void getByKey() {
+    public void getByKey() {
         JobModel model = new JobModel();
         model.setJobName(RANDOM_JOB_NAME);
         when(jobRepo.getByKey("name", RANDOM_JOB_NAME, JobModel.class)).thenReturn(model);
@@ -91,7 +91,7 @@ class GenericDaoTest {
     }
 
     @Test
-    void getAllByKey() {
+    public void getAllByKey() {
         List<JobModel> models = new ArrayList<>();
         models.add(new JobModel());
         models.add(new JobModel());
@@ -104,7 +104,7 @@ class GenericDaoTest {
     }
 
     @Test
-    void updateMany() {
+    public void updateMany() {
         List<Operation> operations = new ArrayList<>();
         Operation op = new Operation(RANDOM_JOB_NAME, Operation.TYPES.STRING, "name", Operation.OPERATORS.EQ);
         operations.add(op);
@@ -113,7 +113,7 @@ class GenericDaoTest {
     }
 
     @Test
-    void getCount() {
+    public void getCount() {
         long totalCount = 10;
         when(jobRepo.getCount(JobModel.class)).thenReturn(totalCount);
         long result = jobModelDao.getCount(JobModel.class);

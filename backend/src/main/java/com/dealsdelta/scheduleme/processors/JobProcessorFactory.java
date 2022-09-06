@@ -2,6 +2,7 @@ package com.dealsdelta.scheduleme.processors;
 
 
 import com.dealsdelta.scheduleme.dtos.IJob;
+import com.dealsdelta.scheduleme.dtos.Job;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,13 @@ public class JobProcessorFactory {
     }
 
     public static JobProcessor getJobProcessor(IJob job) {
+        if(jobProcessorMap.containsKey(job.getJobKind())) {
+            return jobProcessorMap.get(job.getJobKind());
+        }
+        return null;
+    }
+
+    public static JobProcessor getJobProcessor(Job job) {
         if(jobProcessorMap.containsKey(job.getJobKind())) {
             return jobProcessorMap.get(job.getJobKind());
         }

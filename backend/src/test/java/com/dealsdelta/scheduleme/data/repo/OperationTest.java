@@ -1,11 +1,12 @@
 package com.dealsdelta.scheduleme.data.repo;
 
 import com.dealsdelta.scheduleme.data.models.JobModel;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import javax.persistence.ParameterMode;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -14,9 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
  * Created on : 04/09/22
  */
 
-class OperationTest {
+public class OperationTest {
     @Test
-    void testOperationBasicConstructor() {
+    public void testOperationBasicConstructor() {
         String value = "Test";
         String column = "TestColumn";
         Operation operation = new Operation(value, Operation.TYPES.STRING,
@@ -28,7 +29,7 @@ class OperationTest {
     }
 
     @Test
-    void testOperationConstructorWithDynamicParam() {
+    public void testOperationConstructorWithDynamicParam() {
         String value = "Test";
         String column = "TestColumn";
         String dynamicParam = "Dynamic Param";
@@ -42,7 +43,7 @@ class OperationTest {
     }
 
     @Test
-    void testOperationConstructorWithParamMode() {
+    public void testOperationConstructorWithParamMode() {
         String value = "Test";
         String column = "TestColumn";
         String dynamicParam = "Dynamic Param";
@@ -54,7 +55,7 @@ class OperationTest {
     }
 
     @Test
-    void testOperationConstructorWithClassType() {
+    public void testOperationConstructorWithClassType() {
         String value = "Test";
         String column = "TestColumn";
         String dynamicParam = "Dynamic Param";
@@ -66,7 +67,7 @@ class OperationTest {
     }
 
     @Test
-    void testOperationConstructorWithClassTypeAndDynamicParam() {
+    public void testOperationConstructorWithClassTypeAndDynamicParam() {
         String value = "Test";
         String column = "TestColumn";
         String dynamicParam = "Dynamic Param";
@@ -79,7 +80,7 @@ class OperationTest {
     }
 
     @Test
-    void testOperatorType() {
+    public void testOperatorType() {
         Operation operation = new Operation("value", Operation.TYPES.STRING, "column", ParameterMode.IN);
         assertEquals(String.class, operation.getOperandType());
         operation.setType(Operation.TYPES.BOOLEAN);
@@ -89,7 +90,7 @@ class OperationTest {
     }
 
     @Test
-    void testSetters() {
+    public void testSetters() {
         String value = "val";
         String name = "name";
         String dynamicParam = "dynamicParam";
