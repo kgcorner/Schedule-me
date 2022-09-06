@@ -1,15 +1,16 @@
 package com.dealsdelta.scheduleme.services;
 
+import com.dealsdelta.scheduleme.data.dao.JobAuditDao;
 import com.dealsdelta.scheduleme.data.dao.JobDao;
+import com.dealsdelta.scheduleme.data.dao.LogDao;
+import com.dealsdelta.scheduleme.data.dao.RunningJobDao;
 import com.dealsdelta.scheduleme.data.models.JobModel;
 import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.Job;
 import com.dealsdelta.scheduleme.dtos.RUN_FREQUENCY;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.reflect.Whitebox;
 
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -29,14 +31,14 @@ import static org.powermock.api.mockito.PowerMockito.when;
  */
 
 
-class JobServiceTest {
+public class JobServiceTest {
 
     private Job job;
     private JobService jobService;
     private JobDao jobDao;
 
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         job = new Job();
         job.setFrequency(RUN_FREQUENCY.ONCE);
         jobService = new JobService();
@@ -45,7 +47,7 @@ class JobServiceTest {
     }
     
     @Test
-    void createJob() {
+    public void createJob() {
         Job job = new Job();
         job.setStartTime(LocalTime.now());
         job.setFrequency(RUN_FREQUENCY.ONCE);
@@ -56,36 +58,36 @@ class JobServiceTest {
     }
 
     @Test
-    void testNoStartTimeJob() {
+    public void testNoStartTimeJob() {
         try {
             jobService.validateJob(job);
-            Assertions.fail("Job with no start time is processed");
+            fail("Job with no start time is processed");
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "job must have a start Time", x.getMessage());
+            assertEquals( "job must have a start Time", x.getMessage());
         }
     }
 
     @Test
-    void testNoJobFrequency() {
+    public void testNoJobFrequency() {
         try {
             Job job = new Job();
             job.setStartTime(LocalTime.now());
             jobService.validateJob(job);
-            Assertions.fail("Job with no frequency is processed");
+            fail("Job with no frequency is processed");
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "job must have a job frequency", x.getMessage());
+            assertEquals( "job must have a job frequency", x.getMessage());
         }
     }
 
     @Test
-    void validateNoDateJob() {
+    public void validateNoDateJob() {
         job.setFrequency(RUN_FREQUENCY.ONCE);
         job.setStartTime(LocalTime.now());
         job.setDayOfMonth(10);
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
+            assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
                 " can't have Day of month, " +
                 "days of week, days of month or days of week", x.getMessage());
         }
@@ -95,7 +97,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
+            assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
                 " can't have Day of month, " +
                 "days of week, days of month or days of week", x.getMessage());
         }
@@ -107,7 +109,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
+            assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
                 " can't have Day of month, " +
                 "days of week, days of month or days of week", x.getMessage());
         }
@@ -119,7 +121,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
+            assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
                 " can't have Day of month, " +
                 "days of week, days of month or days of week", x.getMessage());
         }
@@ -131,7 +133,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
+            assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
                 " can't have Day of month, " +
                 "days of week, days of month or days of week", x.getMessage());
         }
@@ -143,21 +145,21 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
+            assertEquals( "Non Repeatable jobs or daily job or job to run on last day of month" +
                 " can't have Day of month, " +
                 "days of week, days of month or days of week", x.getMessage());
         }
     }
 
     @Test
-    void validateWeeklyJob() {
+    public void validateWeeklyJob() {
         job.setFrequency(RUN_FREQUENCY.WEEKLY);
         job.setStartTime(LocalTime.now());
         job.setDayOfMonth(10);
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Weekly jobs can't have Day of month " +
+            assertEquals( "Weekly jobs can't have Day of month " +
                 ", days of month or days of week", x.getMessage());
         }
         int[] array = {9,2};
@@ -167,7 +169,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Weekly jobs can't have Day of month " +
+            assertEquals( "Weekly jobs can't have Day of month " +
                 ", days of month or days of week", x.getMessage());
         }
         job.setDaysInMonth(emptyArray);
@@ -175,7 +177,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Weekly jobs can't have Day of month " +
+            assertEquals( "Weekly jobs can't have Day of month " +
                 ", days of month or days of week", x.getMessage());
         }
 
@@ -185,19 +187,19 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Weekly jobs must have day of week between 1-7", x.getMessage());
+            assertEquals( "Weekly jobs must have day of week between 1-7", x.getMessage());
         }
         job.setDayOfWeek(0);
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Weekly jobs must have day of week between 1-7", x.getMessage());
+            assertEquals( "Weekly jobs must have day of week between 1-7", x.getMessage());
         }
         job.setDayOfWeek(10);
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Weekly jobs must have day of week between 1-7", x.getMessage());
+            assertEquals( "Weekly jobs must have day of week between 1-7", x.getMessage());
         }
         job.setDaysOfWeek(null);
         job.setDaysInMonth(null);
@@ -206,14 +208,14 @@ class JobServiceTest {
     }
 
     @Test
-    void validateN_WeeklyJob() {
+    public void validateN_WeeklyJob() {
         job.setFrequency(RUN_FREQUENCY.N_WEEKLY);
         job.setStartTime(LocalTime.now());
         job.setDayOfMonth(10);
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals("N_Weekly jobs can't have Day of month " +
+            assertEquals("N_Weekly jobs can't have Day of month " +
                 ",Day of week or days of month", x.getMessage());
         }
         int[] array = {5,2};
@@ -223,7 +225,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Weekly jobs can't have Day of month " +
+            assertEquals( "N_Weekly jobs can't have Day of month " +
                 ",Day of week or days of month", x.getMessage());
         }
         job.setDaysInMonth(emptyArray);
@@ -231,7 +233,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Weekly jobs can't have Day of month " +
+            assertEquals( "N_Weekly jobs can't have Day of month " +
                 ",Day of week or days of month", x.getMessage());
         }
 
@@ -241,7 +243,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Weekly jobs must have days of week",x.getMessage());
+            assertEquals( "N_Weekly jobs must have days of week",x.getMessage());
         }
         int[] invalidArray = {9, 5};
         job.setDayOfWeek(0);
@@ -249,7 +251,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Weekly jobs must have days of week between 1-7", x.getMessage());
+            assertEquals( "N_Weekly jobs must have days of week between 1-7", x.getMessage());
         }
 
         int[] invalidArray2 = {0, 5};
@@ -258,7 +260,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Weekly jobs must have days of week between 1-7", x.getMessage());
+            assertEquals( "N_Weekly jobs must have days of week between 1-7", x.getMessage());
         }
         job.setDaysInMonth(null);
         job.setDaysOfWeek(array);
@@ -267,7 +269,7 @@ class JobServiceTest {
 
 
     @Test
-    void validateN_MonthlyJob() {
+    public void validateN_MonthlyJob() {
         job.setFrequency(RUN_FREQUENCY.N_MONTHLY);
         job.setStartTime(LocalTime.now());
         int[] array = {9,2};
@@ -276,7 +278,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Monthly jobs Running more than once can't have Day of Week " +
+            assertEquals( "N_Monthly jobs Running more than once can't have Day of Week " +
                 ",Day of week or day of month", x.getMessage());
         }
         job.setDaysOfWeek(emptyArray);
@@ -284,7 +286,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals("N_Monthly jobs Running more than once can't have Day of Week " +
+            assertEquals("N_Monthly jobs Running more than once can't have Day of Week " +
                 ",Day of week or day of month", x.getMessage());
         }
         job.setDayOfMonth(0);
@@ -293,7 +295,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Monthly jobs Running more than once can't have Day of Week " +
+            assertEquals( "N_Monthly jobs Running more than once can't have Day of Week " +
                 ",Day of week or day of month", x.getMessage());
         }
 
@@ -303,7 +305,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Monthly jobs must have days in Month",x.getMessage());
+            assertEquals( "N_Monthly jobs must have days in Month",x.getMessage());
         }
         int[] invalidArray = {69, 5};
         job.setDayOfWeek(0);
@@ -311,7 +313,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Monthly jobs must have days of week between 1-31", x.getMessage());
+            assertEquals( "N_Monthly jobs must have days of week between 1-31", x.getMessage());
         }
 
         int[] invalidArray2 = {0, 5};
@@ -320,7 +322,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "N_Monthly jobs must have days of week between 1-31", x.getMessage());
+            assertEquals( "N_Monthly jobs must have days of week between 1-31", x.getMessage());
         }
         job.setDaysOfWeek(null);
         job.setDaysInMonth(array);
@@ -328,7 +330,7 @@ class JobServiceTest {
     }
 
     @Test
-    void validateMonthlyJob() {
+    public void validateMonthlyJob() {
         job.setFrequency(RUN_FREQUENCY.MONTHLY);
         job.setStartTime(LocalTime.now());
         int[] array = {9,2};
@@ -337,7 +339,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals("Monthly jobs can't have Day of Week " +
+            assertEquals("Monthly jobs can't have Day of Week " +
                 ",Day of week or days of month", x.getMessage());
         }
 
@@ -346,7 +348,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Monthly jobs can't have Day of Week " +
+            assertEquals( "Monthly jobs can't have Day of Week " +
                 ",Day of week or days of month", x.getMessage());
         }
         job.setDaysInMonth(emptyArray);
@@ -354,7 +356,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals("Monthly jobs can't have Day of Week " +
+            assertEquals("Monthly jobs can't have Day of Week " +
                 ",Day of week or days of month", x.getMessage());
         }
         job.setDaysInMonth(emptyArray);
@@ -363,14 +365,14 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Monthly jobs must have day of Month between 1-31",x.getMessage());
+            assertEquals( "Monthly jobs must have day of Month between 1-31",x.getMessage());
         }
         job.setDayOfWeek(0);
         job.setDayOfMonth(69);
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Monthly jobs must have day of Month between 1-31", x.getMessage());
+            assertEquals( "Monthly jobs must have day of Month between 1-31", x.getMessage());
         }
 
         job.setDayOfWeek(0);
@@ -378,7 +380,7 @@ class JobServiceTest {
         try {
             jobService.validateJob(job);
         } catch (IllegalArgumentException x) {
-            Assertions.assertEquals( "Monthly jobs must have day of Month between 1-31", x.getMessage());
+            assertEquals( "Monthly jobs must have day of Month between 1-31", x.getMessage());
         }
         job.setDaysInMonth(null);
         job.setDaysOfWeek(null);
@@ -387,7 +389,7 @@ class JobServiceTest {
     }
 
     @Test
-    void updateJob() {
+    public void updateJob() {
         String jobId = "existingJobId";
         job.setJobId(jobId);
         JobModel model = new JobModel();
@@ -400,7 +402,7 @@ class JobServiceTest {
     }
 
     @Test
-    void updateInvalidJob() {
+    public void updateInvalidJob() {
         String jobId = "nonExistingJobId";
         job.setJobId(jobId);
         JobModel model = new JobModel();
@@ -416,7 +418,7 @@ class JobServiceTest {
     }
 
     @Test
-    void removeJob() {
+    public void removeJob() {
         String jobId = "existingJob";
         JobModel model = new JobModel();
         when(jobDao.get(jobId, JobModel.class)).thenReturn(model);
@@ -424,7 +426,7 @@ class JobServiceTest {
     }
 
     @Test
-    void removeJobInvalidId() {
+    public void removeJobInvalidId() {
         String jobId = "nonExistingJob";
         when(jobDao.get(jobId, JobModel.class)).thenReturn(null);
         try {
@@ -436,7 +438,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getJob() {
+    public void getJob() {
         String jobId = "existingJob";
         JobModel model = new JobModel();
         model.setJobId(jobId);
@@ -446,7 +448,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getAllJobCount() {
+    public void getAllJobCount() {
         long count = 10;
         when(jobDao.getCount(JobModel.class)).thenReturn(count);
         long result = jobService.getAllJobCount();
@@ -463,7 +465,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getRunOnceJobs() {
+    public void getRunOnceJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.ONCE);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
@@ -479,7 +481,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getDailyJobs() {
+    public void getDailyJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.DAILY);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
@@ -488,7 +490,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getWeeklyJobs() {
+    public void getWeeklyJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.WEEKLY);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
@@ -497,7 +499,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getNWeeklyJobs() {
+    public void getNWeeklyJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.N_WEEKLY);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
@@ -506,7 +508,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getMonthlyJobs() {
+    public void getMonthlyJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.MONTHLY);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
@@ -515,7 +517,7 @@ class JobServiceTest {
     }
 
     @Test
-    void getNMonthlyJobs() {
+    public void getNMonthlyJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.N_MONTHLY);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
@@ -524,11 +526,30 @@ class JobServiceTest {
     }
 
     @Test
-    void getLastDayOfMonthJobs() {
+    public void getLastDayOfMonthJobs() {
         List<JobModel> models = prepareJobModels();
         List<Operation> operations = getFrequencyOperation(RUN_FREQUENCY.LAST_DAY_OF_MONTH);
         when(jobDao.getAllByKey(operations, JobModel.class)).thenReturn(models);
         List<Job> result = jobService.getLastDayOfMonthJobs();
         assertEquals(models.size(), result.size());
+    }
+
+    @Test
+    public void testGetters() {
+        JobDao jobDao = new JobDao();
+        LogDao logDao = new LogDao();
+        LogService logService = new LogService();
+        RunningJobDao runningJobDao = new RunningJobDao();
+        JobAuditDao jobAuditDao = new JobAuditDao();
+        Whitebox.setInternalState(jobService, "jobDao", jobDao);
+        Whitebox.setInternalState(jobService, "logDao", logDao);
+        Whitebox.setInternalState(jobService, "logService", logService);
+        Whitebox.setInternalState(jobService, "runningJobDao", runningJobDao);
+        Whitebox.setInternalState(jobService, "jobAuditDao", jobAuditDao);
+        assertEquals(jobDao, jobService.getJobDao());
+        assertEquals(logDao, jobService.getLogDao());
+        assertEquals(logService, jobService.getLogService());
+        assertEquals(runningJobDao, jobService.getRunningJobDao());
+        assertEquals(jobAuditDao, jobService.getJobAuditDao());
     }
 }
