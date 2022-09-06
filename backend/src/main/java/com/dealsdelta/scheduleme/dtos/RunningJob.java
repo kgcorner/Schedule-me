@@ -21,4 +21,5 @@ public class RunningJob implements Serializable {
     private String jobId;
     private Date startedAt;
     private IJob job;
+    private Job runningJob;
 }
