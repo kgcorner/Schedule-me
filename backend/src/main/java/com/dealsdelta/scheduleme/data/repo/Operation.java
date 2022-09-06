@@ -201,13 +201,8 @@ public class Operation {
         if (o == null || getClass() != o.getClass()) return false;
         Operation operation = (Operation) o;
         return orWithPrevious == operation.orWithPrevious &&
-            classType.equals(operation.classType) &&
-            mode == operation.mode &&
             value.equals(operation.value) &&
-            type == operation.type &&
-            name.equals(operation.name) &&
-            operator == operation.operator &&
-            Objects.equals(dynamicParamName, operation.dynamicParamName);
+            name.equals(operation.name);
     }
 
     @Override
