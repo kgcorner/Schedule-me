@@ -3,8 +3,8 @@ package com.dealsdelta.scheduleme.resources;
 import com.dealsdelta.scheduleme.dtos.Job;
 import com.dealsdelta.scheduleme.dtos.RUN_FREQUENCY;
 import com.dealsdelta.scheduleme.services.JobService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.powermock.api.mockito.PowerMockito;
@@ -13,7 +13,7 @@ import org.powermock.reflect.Whitebox;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertEquals;
 import static org.powermock.api.mockito.PowerMockito.doNothing;
 import static org.powermock.api.mockito.PowerMockito.when;
 
@@ -24,18 +24,18 @@ import static org.powermock.api.mockito.PowerMockito.when;
  * Created on : 04/09/22
  */
 
-class JobResourceTest {
+public class JobResourceTest {
     private JobResource resource;
     private JobService service;
-    @BeforeEach
-    void setUp() {
+    @Before
+    public void setUp() {
         resource = new JobResource();
         service = PowerMockito.mock(JobService.class);
         Whitebox.setInternalState(resource, "service", service);
     }
 
     @Test
-    void getDailyJobs() {
+    public void getDailyJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -50,7 +50,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getMonthlyJobs() {
+    public void getMonthlyJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -65,7 +65,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getNMonthlyJobs() {
+    public void getNMonthlyJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -80,7 +80,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getWeeklyJobs() {
+    public void getWeeklyJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -95,7 +95,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getNWeeklyJobs() {
+    public void getNWeeklyJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -110,7 +110,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getRunOnceJobs() {
+    public void getRunOnceJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -125,7 +125,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getLastDayOfMonthJobs() {
+    public void getLastDayOfMonthJobs() {
         List<Job> jobs = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Job job = new Job();
@@ -140,7 +140,7 @@ class JobResourceTest {
     }
 
     @Test
-    void getJobCount() {
+    public void getJobCount() {
         long count = 100;
         when(service.getAllJobCount()).thenReturn(count);
         long result = resource.getJobCount();
@@ -148,14 +148,14 @@ class JobResourceTest {
     }
 
     @Test
-    void removeJob() {
+    public void removeJob() {
         String jobId = "jobId";
         doNothing().when(service).removeJob(jobId);
         resource.removeJob(jobId);
     }
 
     @Test
-    void getJob() {
+    public void getJob() {
         Job job = new Job();
         String jobId = "jobId";
         job.setJobId(jobId);
@@ -165,7 +165,7 @@ class JobResourceTest {
     }
 
     @Test
-    void updateJob() {
+    public void updateJob() {
         Job job = new Job();
         String jobId = "jobId";
         job.setJobId(jobId);
