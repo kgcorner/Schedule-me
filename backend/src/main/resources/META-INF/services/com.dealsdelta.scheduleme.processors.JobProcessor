@@ -1,1 +1,3 @@
 com.dealsdelta.scheduleme.processors.MailJobProcessor
+com.dealsdelta.scheduleme.processors.InstagramJobProcessor
+com.dealsdelta.scheduleme.processors.FacebookJobProcessor
