@@ -1,7 +1,6 @@
 package com.dealsdelta.scheduleme.data.dao;
 
 
-import com.dealsdelta.scheduleme.data.models.DailyJobModel;
 import com.dealsdelta.scheduleme.data.models.RunningJobModel;
 import com.dealsdelta.scheduleme.data.repo.JobRepo;
 import com.dealsdelta.scheduleme.data.repo.Operation;

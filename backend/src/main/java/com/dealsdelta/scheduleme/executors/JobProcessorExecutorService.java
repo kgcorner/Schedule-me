@@ -4,16 +4,12 @@ package com.dealsdelta.scheduleme.executors;
 import com.dealsdelta.scheduleme.data.dao.*;
 import com.dealsdelta.scheduleme.data.models.RunningJobModel;
 import com.dealsdelta.scheduleme.data.repo.Operation;
-import com.dealsdelta.scheduleme.dtos.IJob;
 import com.dealsdelta.scheduleme.dtos.JOB_STATUS;
-import com.dealsdelta.scheduleme.dtos.RecordProcessorMonthlyJob;
 import com.dealsdelta.scheduleme.dtos.RunningJob;
 import com.dealsdelta.scheduleme.processors.JobProcessor;
 import com.dealsdelta.scheduleme.processors.JobProcessorFactory;
-import com.dealsdelta.scheduleme.services.JobScannerService;
 import com.dealsdelta.scheduleme.services.JobService;
-import com.dealsdelta.scheduleme.services.LogService;
-import com.dealsdelta.scheduleme.services.TaskService;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,14 +58,14 @@ public class JobProcessorExecutorService {
         if(!started)
             executorService = Executors.newFixedThreadPool(poolSize);
         synchronized (LOCK) {
-            Operation operation = new Operation(IJob.JOB_STATUS.DUE.toString(), Operation.TYPES.STRING, "job.status",
+            Operation operation = new Operation(JOB_STATUS.DUE.toString(), Operation.TYPES.STRING, "job.status",
                 Operation.OPERATORS.EQ);
             List<Operation> operations = new ArrayList<>();
             operations.add(operation);
             List<RunningJobModel> runningJobs = runningJobDao.getAllBy(operations);
             if(runningJobs.size() > 0) {
                 for(RunningJob runningJob : runningJobs) {
-                    JobProcessor jobProcessor = JobProcessorFactory.getJobProcessor(runningJob.getJob());
+                    JobProcessor jobProcessor = JobProcessorFactory.getJobProcessor(runningJob.getRunningJob());
                     JobRunner runner = new JobRunner(runningJob, jobProcessor, jobService);
                     runningJob.getRunningJob().setStatus(JOB_STATUS.WAITING);
                     runningJobDao.update((RunningJobModel)runningJob);
