@@ -15,7 +15,6 @@ import java.util.Map;
  */
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class JobWrapper {
     private RunningJob runningJob;

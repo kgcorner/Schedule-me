@@ -1,14 +1,11 @@
 package com.dealsdelta.scheduleme.data.models;
 
 
-import com.dealsdelta.scheduleme.dtos.IJob;
 import com.dealsdelta.scheduleme.dtos.RunningJob;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
-
-import java.util.Date;
 
 /**
  * Description : <Write class Description>

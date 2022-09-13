@@ -3,7 +3,7 @@ package com.dealsdelta.scheduleme.resources;
 
 import com.dealsdelta.scheduleme.dtos.*;
 import com.dealsdelta.scheduleme.services.JobService;
-import com.dealsdelta.scheduleme.services.TaskService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

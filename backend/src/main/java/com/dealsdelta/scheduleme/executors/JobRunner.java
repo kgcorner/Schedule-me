@@ -1,21 +1,14 @@
 package com.dealsdelta.scheduleme.executors;
 
 
-import com.dealsdelta.scheduleme.data.dao.DailyJobDao;
-import com.dealsdelta.scheduleme.data.dao.HourlyJobDao;
-import com.dealsdelta.scheduleme.data.dao.LogDao;
-import com.dealsdelta.scheduleme.data.dao.MonthlyJobDao;
 import com.dealsdelta.scheduleme.data.models.*;
 import com.dealsdelta.scheduleme.data.repo.Operation;
 import com.dealsdelta.scheduleme.dtos.*;
 import com.dealsdelta.scheduleme.processors.JobProcessor;
 import com.dealsdelta.scheduleme.services.JobService;
-import com.dealsdelta.scheduleme.services.TaskService;
+
 import org.apache.log4j.Logger;
 
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,20 +36,20 @@ public class JobRunner implements Runnable {
         JobAuditModel jobAuditModel = new JobAuditModel();
         jobAuditModel.setStartTime(new Date());
         LOGGER.info("Starting job : " + runningJob.getRunningJob().getJobName()+ "(" + runningJob.getRunningJob().getJobId()+")");
-        updateJobStatus(runningJob.getRunningJob(), IJob.JOB_STATUS.RUNNING.toString());
+        updateJobStatus(runningJob.getRunningJob(), JOB_STATUS.RUNNING.toString());
         jobProcessor.setLogService(jobService.getLogService());
         jobProcessor.setRunningJobDao(jobService.getRunningJobDao());
         JobWrapper wrapper = new JobWrapper();
         wrapper.setRunningJob(runningJob);
         try {
-            updateJobStatus(runningJob.getRunningJob(), IJob.JOB_STATUS.RUNNING.toString());
+            updateJobStatus(runningJob.getRunningJob(), JOB_STATUS.RUNNING.toString());
             jobProcessor.processJob(wrapper);
-            updateJobStatus(runningJob.getRunningJob(), IJob.JOB_STATUS.COMPLETED.toString());
-            jobAuditModel.setStatus( IJob.JOB_STATUS.COMPLETED.toString());
+            updateJobStatus(runningJob.getRunningJob(), JOB_STATUS.COMPLETED.toString());
+            jobAuditModel.setStatus( JOB_STATUS.COMPLETED.toString());
         } catch (Exception x) {
-            updateJobStatus(runningJob.getRunningJob(), IJob.JOB_STATUS.FAILED.toString());
+            updateJobStatus(runningJob.getRunningJob(), JOB_STATUS.FAILED.toString());
             jobProcessor.recover(wrapper);
-            jobAuditModel.setStatus( IJob.JOB_STATUS.FAILED.toString());
+            jobAuditModel.setStatus( JOB_STATUS.FAILED.toString());
         }
         List<Operation> operations = new ArrayList<>();
         Operation operation = new Operation(wrapper.getRunningJob().getRunningJobId(), Operation.TYPES.STRING, "runId", Operation.OPERATORS.EQ);
@@ -64,7 +57,7 @@ public class JobRunner implements Runnable {
         List<LogModel> allLogs = jobService.getLogDao().getAllBy(operations, 0, Integer.MAX_VALUE);
         jobAuditModel.setJobId(wrapper.getRunningJob().getJobId());
         jobAuditModel.setLogs(allLogs);
-        jobAuditModel.setJob(wrapper.getRunningJob().getJob());
+        jobAuditModel.setJob(wrapper.getRunningJob().getRunningJob());
         jobAuditModel.setEndTime(new Date());
         jobService.getRunningJobDao().delete((RunningJobModel) runningJob);
         jobService.getJobAuditDao().create(jobAuditModel);

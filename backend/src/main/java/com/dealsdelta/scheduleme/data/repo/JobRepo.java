@@ -1,7 +1,6 @@
 package com.dealsdelta.scheduleme.data.repo;
 
 
-import com.dealsdelta.scheduleme.data.models.DailyJobModel;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 

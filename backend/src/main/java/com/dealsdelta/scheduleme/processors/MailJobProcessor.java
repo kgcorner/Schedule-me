@@ -3,13 +3,9 @@ package com.dealsdelta.scheduleme.processors;
 
 import com.dealsdelta.scheduleme.data.dao.RunningJobDao;
 import com.dealsdelta.scheduleme.data.models.*;
-import com.dealsdelta.scheduleme.dtos.HourlyJob;
-import com.dealsdelta.scheduleme.dtos.IJob;
-import com.dealsdelta.scheduleme.dtos.JobWrapper;
-import com.dealsdelta.scheduleme.dtos.Log;
+import com.dealsdelta.scheduleme.dtos.*;
 import com.dealsdelta.scheduleme.services.LogService;
 
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -26,7 +22,7 @@ public class MailJobProcessor implements JobProcessor {
 
     @Override
     public void processJob(JobWrapper wrapper) {
-        IJob job = wrapper.getRunningJob().getJob();
+        Job job = wrapper.getRunningJob().getRunningJob();
 
         if(job.getJobParams().containsKey("email") || job.getJobParams().containsKey("emails")) {
             if(job.getJobParams().containsKey("email")) {
@@ -67,45 +63,17 @@ public class MailJobProcessor implements JobProcessor {
 
     }
 
-    private void updateProcessedRecordCount(IJob job, int count) {
-        if(job instanceof RecordProcessorDailyJobModel) {
-            ((RecordProcessorDailyJobModel) job).setRecordProcessed(count);
-        }
+    private void updateProcessedRecordCount(Job job, int count) {
 
-        if(job instanceof RecordProcessorJobModel) {
-            ((RecordProcessorJobModel) job).setRecordProcessed(count);
-        }
-
-        if(job instanceof RecordProcessorMonthlyJobModel) {
-            ((RecordProcessorMonthlyJobModel) job).setRecordProcessed(count);
-        }
-
-        if(job instanceof RecordProcessorHourlyJobModel) {
-            ((RecordProcessorHourlyJobModel) job).setRecordProcessed(count);
-        }
     }
 
-    private void updateRecordCount(IJob job, int count) {
-        if(job instanceof RecordProcessorDailyJobModel) {
-            ((RecordProcessorDailyJobModel) job).setRecordCount(count);
-        }
+    private void updateRecordCount(Job job, int count) {
 
-        if(job instanceof RecordProcessorJobModel) {
-            ((RecordProcessorJobModel) job).setRecordCount(count);
-        }
-
-        if(job instanceof RecordProcessorMonthlyJobModel) {
-            ((RecordProcessorMonthlyJobModel) job).setRecordCount(count);
-        }
-
-        if(job instanceof RecordProcessorHourlyJobModel) {
-            ((RecordProcessorHourlyJobModel) job).setRecordCount(count);
-        }
     }
 
     @Override
-    public boolean supports(IJob.JOB_KIND jobKind) {
-        return jobKind == IJob.JOB_KIND.MAIL_SENDER;
+    public boolean supports(JOB_KIND jobKind) {
+        return jobKind == JOB_KIND.MAIL_SENDER;
     }
 
     @Override

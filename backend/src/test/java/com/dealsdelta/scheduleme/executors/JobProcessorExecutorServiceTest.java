@@ -6,10 +6,7 @@ import com.dealsdelta.scheduleme.data.dao.RunningJobDao;
 import com.dealsdelta.scheduleme.data.models.LogModel;
 import com.dealsdelta.scheduleme.data.models.RunningJobModel;
 import com.dealsdelta.scheduleme.data.repo.Operation;
-import com.dealsdelta.scheduleme.dtos.IJob;
-import com.dealsdelta.scheduleme.dtos.Job;
-import com.dealsdelta.scheduleme.dtos.Log;
-import com.dealsdelta.scheduleme.dtos.RunningJob;
+import com.dealsdelta.scheduleme.dtos.*;
 import com.dealsdelta.scheduleme.processors.JobProcessor;
 import com.dealsdelta.scheduleme.processors.JobProcessorFactory;
 import com.dealsdelta.scheduleme.services.JobService;
@@ -70,7 +67,7 @@ public class JobProcessorExecutorServiceTest {
         when(jobService.getJobAuditDao()).thenReturn(jobAuditDao);
         when(logDao.getAllBy(operations, 0, Integer.MAX_VALUE)).thenReturn(logs);
         doNothing().when(runningJobDao).delete((RunningJobModel) runningJob);
-        Operation jobOoperation = new Operation(IJob.JOB_STATUS.DUE.toString(), Operation.TYPES.STRING, "job.status",
+        Operation jobOoperation = new Operation(JOB_STATUS.DUE.toString(), Operation.TYPES.STRING, "job.status",
             Operation.OPERATORS.EQ);
         List<Operation> jobOperations = new ArrayList<>();
         jobOperations.add(jobOoperation);
