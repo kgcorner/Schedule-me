@@ -2,44 +2,31 @@ package com.dealsdelta.scheduleme.processors;
 
 
 import com.dealsdelta.scheduleme.data.dao.RunningJobDao;
-import com.dealsdelta.scheduleme.data.models.*;
-import com.dealsdelta.scheduleme.dtos.*;
+import com.dealsdelta.scheduleme.dtos.JOB_KIND;
+import com.dealsdelta.scheduleme.dtos.JobWrapper;
 import com.dealsdelta.scheduleme.services.LogService;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * Description : <Write class Description>
  * Author: kumar
- * Created on : 27/06/22
+ * Created on : 13/09/22
  */
 
-public class MailJobProcessor implements JobProcessor {
-
-    private LogService logService;
-    private RunningJobDao runningJobDao;
+public class InstagramJobProcessor implements JobProcessor {
 
     @Override
-    public void processJob(JobWrapper wrapper) {
-
-    }
-
-    private void updateProcessedRecordCount(Job job, int count) {
-
-    }
-
-    private void updateRecordCount(Job job, int count) {
+    public void processJob(JobWrapper jobWrapper) {
 
     }
 
     @Override
     public boolean supports(JOB_KIND jobKind) {
-        return jobKind == JOB_KIND.MAIL_SENDER;
+        return jobKind == JOB_KIND.INSTAGRAM_POST_CREATOR;
     }
 
     @Override
     public void setLogService(LogService logService) {
+
     }
 
     @Override
