@@ -124,7 +124,12 @@ public class JobScannerServiceTest {
         service.scanJobs();
         Mockito.verify(jobDao, Mockito.times(totalJobsThatShouldRun)).update(ArgumentMatchers.any(JobModel.class));
         Mockito.verify(runningJobDao, Mockito.times(totalJobsThatShouldRun)).create(ArgumentMatchers.any(RunningJobModel.class));
-        //Mockito.verify(jobProcessorExecutorService, Mockito.times(1)).start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+
+        }
+        Mockito.verify(jobProcessorExecutorService, Mockito.times(1)).start();
 
         when(calendar.get(Calendar.DAY_OF_WEEK)).thenReturn(0);
         when(calendar.get(Calendar.DAY_OF_MONTH)).thenReturn(0);
@@ -132,7 +137,12 @@ public class JobScannerServiceTest {
         service.scanJobs();
         Mockito.verify(jobDao, Mockito.times(totalJobsThatShouldRun + dailyJobsCount + runOnceJobCount)).update(ArgumentMatchers.any(JobModel.class));
         Mockito.verify(runningJobDao, Mockito.times(totalJobsThatShouldRun  + dailyJobsCount + runOnceJobCount)).create(ArgumentMatchers.any(RunningJobModel.class));
-        //Mockito.verify(jobProcessorExecutorService).start();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+
+        }
+        Mockito.verify(jobProcessorExecutorService, Mockito.times(2)).start();
     }
 
     private void createMockedJobs(LocalTime localTime, List<JobModel> jobs, int i2, RUN_FREQUENCY daily) {
