@@ -21,26 +21,6 @@ import java.util.List;
 
 public class MongoRepository<T extends Serializable> {
 
-    class Order {
-        private String name;
-        private boolean isAscending;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public boolean isAscending() {
-            return isAscending;
-        }
-
-        public void setAscending(boolean ascending) {
-            isAscending = ascending;
-        }
-    }
 
     protected MongoTemplate template;
 
@@ -58,11 +38,6 @@ public class MongoRepository<T extends Serializable> {
 
     
     public List<T> getAll(List<Operation> conditions, int page, int itemPerPage, Class<T> model) {
-        return getAll(conditions, page, itemPerPage, model, Collections.emptyList());
-    }
-
-    
-    public List<T> getAll(List<Operation> conditions, int page, int itemPerPage, Class<T> model, List<Order> orderList) {
         Query query = new Query();
         Pageable pageable = PageRequest.of(page, itemPerPage);
         if(itemPerPage > 0)
@@ -115,17 +90,6 @@ public class MongoRepository<T extends Serializable> {
             }
         }
         query.addCriteria(criteria);
-        if(orderList != null && orderList.size() > 1) {
-            List<Sort.Order> sortOrder = new ArrayList<>();
-            for(Order order : orderList) {
-                if(order.isAscending()) {
-                    sortOrder.add(new Sort.Order(Sort.Direction.ASC, order.getName()));
-                } else {
-                    sortOrder.add(new Sort.Order(Sort.Direction.DESC, order.getName()));
-                }
-            }
-            query.with(Sort.by(sortOrder));
-        }
         return template.find(query, model);
     }
 

@@ -111,7 +111,7 @@ public class JobScannerService {
                 List<Operation> runningJobQuery = new ArrayList<>();
                 Operation jobQuery = new Operation(job.getJobId(), Operation.TYPES.STRING, "runningJobId", Operation.OPERATORS.EQ);
                 runningJobQuery.add(jobQuery);
-                int runningInstancesCount = runningJobDao.getAllBy(runningJobQuery).size();
+                int runningInstancesCount = runningJobDao.getAllByKey(runningJobQuery, RunningJobModel.class).size();
                 if(jobInDb.getStatus() == JOB_STATUS.DUE && runningInstancesCount == 0) {
                     jobDao.update(job);
                     runningJobDao.create(runningJob);

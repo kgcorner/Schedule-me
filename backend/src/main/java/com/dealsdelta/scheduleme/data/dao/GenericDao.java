@@ -16,7 +16,7 @@ import java.util.List;
 
 public class GenericDao<T extends Serializable> {
     @Autowired
-    private JobRepo<T> jobRepo;
+    protected JobRepo<T> jobRepo;
 
     public T create(T dailyJobModel) {
         return jobRepo.create(dailyJobModel);

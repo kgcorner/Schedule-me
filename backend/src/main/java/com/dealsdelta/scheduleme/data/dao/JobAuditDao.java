@@ -21,37 +21,8 @@ import java.util.*;
  */
 @Repository
 @Transactional
-public class JobAuditDao {
-    @Autowired
-    private JobRepo<JobAuditModel> jobAuditModelJobRepo;
+public class JobAuditDao extends GenericDao<JobAuditModel> {
 
-    public JobAuditModel create(JobAuditModel JobAuditModel) {
-        return jobAuditModelJobRepo.create(JobAuditModel);
-    }
-
-    public JobAuditModel update(JobAuditModel JobAuditModel) {
-        return jobAuditModelJobRepo.update(JobAuditModel);
-    }
-
-    public void delete(JobAuditModel model) {
-        jobAuditModelJobRepo.remove(model);
-    }
-
-    public List<JobAuditModel> getJobAuditModels() {
-        return jobAuditModelJobRepo.getAll(JobAuditModel.class);
-    }
-
-    public JobAuditModel getJobAuditModel(String jobId) {
-        return jobAuditModelJobRepo.getById(jobId, JobAuditModel.class);
-    }
-
-    public JobAuditModel getJobAuditModelByKey(String key, String value) {
-        return jobAuditModelJobRepo.getByKey(key, value, JobAuditModel.class);
-    }
-
-    public List<JobAuditModel> getAllBy(List<Operation> operations, int page, int count) {
-        return jobAuditModelJobRepo.getAll(operations, page, count, JobAuditModel.class);
-    }
 
     public List<JobRunStat> getJobRunByDay(Date beforeDate, Date nowDate) {
         String query = "[\n" +
@@ -74,7 +45,7 @@ public class JobAuditDao {
         query = query.replace("{1}", before).replace("{2}", now);
         String aggregateTemplate = "{ 'aggregate': 'jobAuditModel', 'pipeline': %s, 'cursor': { } }";
         aggregateTemplate = String.format(aggregateTemplate, query);
-        Object data = jobAuditModelJobRepo.runSelectNativeQuery(aggregateTemplate);
+        Object data = jobRepo.runSelectNativeQuery(aggregateTemplate);
         List<Document> records = (List<Document>) data;
         List<JobRunStat> result = new ArrayList<>();
         for(Document record : records) {
@@ -112,7 +83,7 @@ public class JobAuditDao {
         query = query.replace("{1}", before).replace("{2}", now);
         String aggregateTemplate = "{ 'aggregate': 'jobAuditModel', 'pipeline': %s, 'cursor': { } }";
         aggregateTemplate = String.format(aggregateTemplate, query);
-        Object data = jobAuditModelJobRepo.runSelectNativeQuery(aggregateTemplate);
+        Object data = jobRepo.runSelectNativeQuery(aggregateTemplate);
         List<Document> records = (List<Document>) data;
         List<JobRunStat> result = new ArrayList<>();
         for(Document record : records) {

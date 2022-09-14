@@ -65,7 +65,7 @@ public class JobProcessorExecutorServiceTest {
         when(jobService.getLogDao()).thenReturn(logDao);
         when(jobService.getRunningJobDao()).thenReturn(runningJobDao);
         when(jobService.getJobAuditDao()).thenReturn(jobAuditDao);
-        when(logDao.getAllBy(operations, 0, Integer.MAX_VALUE)).thenReturn(logs);
+        when(logDao.getAllByKey(operations, LogModel.class)).thenReturn(logs);
         doNothing().when(runningJobDao).delete((RunningJobModel) runningJob);
         Operation jobOoperation = new Operation(JOB_STATUS.DUE.toString(), Operation.TYPES.STRING, "job.status",
             Operation.OPERATORS.EQ);
@@ -74,7 +74,7 @@ public class JobProcessorExecutorServiceTest {
 
         List<RunningJobModel> runningJobs = new ArrayList<>();
         runningJobs.add((RunningJobModel) runningJob);
-        when(runningJobDao.getAllBy(jobOperations)).thenReturn(runningJobs);
+        when(runningJobDao.getAllByKey(jobOperations, RunningJobModel.class)).thenReturn(runningJobs);
         Whitebox.setInternalState(executorService, "poolSize", 10);
         Whitebox.setInternalState(executorService, "runningJobDao", runningJobDao);
         Whitebox.setInternalState(executorService, "jobService", jobService);

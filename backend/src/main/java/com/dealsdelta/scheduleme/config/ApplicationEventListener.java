@@ -20,11 +20,11 @@ public class ApplicationEventListener  implements ApplicationListener<ContextRef
     private static final Logger LOGGER = Logger.getLogger(ApplicationEventListener.class);
 
     @Autowired
-    JobProcessorExecutorService jobProcessorExecutorServicel;
+    JobProcessorExecutorService jobProcessorExecutorService;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         LOGGER.info("Application has been fully started");
-        jobProcessorExecutorServicel.start();
+        jobProcessorExecutorService.start();
     }
 }

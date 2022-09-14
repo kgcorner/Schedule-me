@@ -18,39 +18,5 @@ import java.util.List;
  */
 @Repository
 @Transactional
-public class RunningJobDao  {
-    @Autowired
-    private JobRepo<RunningJobModel> jobRepo;
-
-    public RunningJob create(RunningJobModel RunningJobModel) {
-        return jobRepo.create(RunningJobModel);
-    }
-
-    public RunningJob update(RunningJobModel RunningJobModel) {
-        return jobRepo.update(RunningJobModel);
-    }
-
-    public void delete(RunningJobModel model) {
-        jobRepo.remove(model);
-    }
-
-    public List<RunningJobModel> getRunningJobs() {
-        return jobRepo.getAll(RunningJobModel.class);
-    }
-
-    public RunningJob getRunningJob(String jobId) {
-        return jobRepo.getById(jobId, RunningJobModel.class);
-    }
-
-    public RunningJob getRunningJobByKey(String key, String value) {
-        return jobRepo.getByKey(key, value, RunningJobModel.class);
-    }
-
-    public List<RunningJobModel> getAllBy(List<Operation> operations) {
-        return jobRepo.getAll(operations, 0, Integer.MAX_VALUE, RunningJobModel.class);
-    }
-
-    public long getJobCount() {
-        return jobRepo.getCount(RunningJobModel.class);
-    }
+public class RunningJobDao extends GenericDao<RunningJobModel>  {
 }

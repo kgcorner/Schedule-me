@@ -113,7 +113,7 @@ public class JobScannerServiceTest {
         Operation jobQuery = new Operation(MOCKED_JOB_ID, Operation.TYPES.STRING, "runningJobId", Operation.OPERATORS.EQ);
         runningJobQuery.add(jobQuery);
         when(jobDao.get(MOCKED_JOB_ID, JobModel.class)).thenReturn(mockedDueStatusJob);
-        when(runningJobDao.getAllBy(runningJobQuery)).thenReturn(new ArrayList<>());
+        when(runningJobDao.getAllByKey(runningJobQuery, RunningJobModel.class)).thenReturn(new ArrayList<>());
         Calendar calendar = mock(Calendar.class);
         mockStatic(DateTimeUtil.class);
         when(DateTimeUtil.getCalenderInstance()).thenReturn(calendar);
