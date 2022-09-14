@@ -54,7 +54,7 @@ public class JobRunner implements Runnable {
         List<Operation> operations = new ArrayList<>();
         Operation operation = new Operation(wrapper.getRunningJob().getRunningJobId(), Operation.TYPES.STRING, "runId", Operation.OPERATORS.EQ);
         operations.add(operation);
-        List<LogModel> allLogs = jobService.getLogDao().getAllBy(operations, 0, Integer.MAX_VALUE);
+        List<LogModel> allLogs = jobService.getLogDao().getAllByKey(operations, LogModel.class);
         jobAuditModel.setJobId(wrapper.getRunningJob().getJobId());
         jobAuditModel.setLogs(allLogs);
         jobAuditModel.setJob(wrapper.getRunningJob().getRunningJob());

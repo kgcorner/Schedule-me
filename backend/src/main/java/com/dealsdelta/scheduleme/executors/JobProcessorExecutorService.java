@@ -62,7 +62,7 @@ public class JobProcessorExecutorService {
                 Operation.OPERATORS.EQ);
             List<Operation> operations = new ArrayList<>();
             operations.add(operation);
-            List<RunningJobModel> runningJobs = runningJobDao.getAllBy(operations);
+            List<RunningJobModel> runningJobs = runningJobDao.getAllByKey(operations, RunningJobModel.class);
             if(runningJobs.size() > 0) {
                 for(RunningJob runningJob : runningJobs) {
                     JobProcessor jobProcessor = JobProcessorFactory.getJobProcessor(runningJob.getRunningJob());

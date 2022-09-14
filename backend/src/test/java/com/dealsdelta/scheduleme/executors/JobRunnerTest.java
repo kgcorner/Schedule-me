@@ -59,7 +59,7 @@ public class JobRunnerTest {
         when(jobService.getLogDao()).thenReturn(logDao);
         when(jobService.getRunningJobDao()).thenReturn(runningJobDao);
         when(jobService.getJobAuditDao()).thenReturn(jobAuditDao);
-        when(logDao.getAllBy(operations, 0, Integer.MAX_VALUE)).thenReturn(logs);
+        when(logDao.getAllByKey(operations, LogModel.class)).thenReturn(logs);
         doNothing().when(runningJobDao).delete((RunningJobModel) runningJob);
 
         JobRunner runner = new JobRunner(runningJob, jobProcessor, jobService);
@@ -96,7 +96,7 @@ public class JobRunnerTest {
         when(jobService.getLogDao()).thenReturn(logDao);
         when(jobService.getRunningJobDao()).thenReturn(runningJobDao);
         when(jobService.getJobAuditDao()).thenReturn(jobAuditDao);
-        when(logDao.getAllBy(operations, 0, Integer.MAX_VALUE)).thenReturn(logs);
+        when(logDao.getAllByKey(operations, LogModel.class)).thenReturn(logs);
         doNothing().when(runningJobDao).delete((RunningJobModel) runningJob);
         JobWrapper wrapper = new JobWrapper();
         wrapper.setRunningJob(runningJob);

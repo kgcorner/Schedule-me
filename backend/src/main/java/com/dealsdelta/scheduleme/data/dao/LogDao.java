@@ -18,36 +18,5 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class LogDao {
-
-    @Autowired
-    private JobRepo<LogModel> jobRepo;
-
-    public LogModel create(LogModel LogModel) {
-        return jobRepo.create(LogModel);
-    }
-
-    public LogModel update(LogModel LogModel) {
-        return jobRepo.update(LogModel);
-    }
-
-    public void delete(LogModel model) {
-        jobRepo.remove(model);
-    }
-
-    public List<LogModel> getLogModels() {
-        return jobRepo.getAll(LogModel.class);
-    }
-
-    public LogModel getLogModel(String jobId) {
-        return jobRepo.getById(jobId, LogModel.class);
-    }
-
-    public LogModel getLogModelByKey(String key, String value) {
-        return jobRepo.getByKey(key, value, LogModel.class);
-    }
-
-    public List<LogModel> getAllBy(List<Operation> operations, int page, int count) {
-        return jobRepo.getAll(operations, page, count, LogModel.class);
-    }
+public class LogDao extends GenericDao<LogModel>{
 }
