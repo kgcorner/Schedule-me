@@ -1,3 +1,7 @@
+
+[![Build Status](https://app.travis-ci.com/kgcorner/Schedule-me.svg?branch=master)](https://app.travis-ci.com/kgcorner/Schedule-me)
+[![codecov](https://codecov.io/gh/kgcorner/Schedule-me/branch/master/graph/badge.svg?token=47kLZJJuJ8)](https://codecov.io/gh/kgcorner/Schedule-me)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.dealsdelta%3Aschedule-me&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=com.dealsdelta%3Aschedule-me)
 # Schedule-me
 Schedule-me is a small scheduling platform that let's you create monitor and run jobs. It's a barebone ready to use framework that comes with a dummy job.
 
