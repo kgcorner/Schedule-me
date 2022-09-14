@@ -234,6 +234,9 @@ public class JobScannerService {
     }
     
     private void runExecutor() {
-        new Thread(() -> jobProcessorExecutorService.start()).start();
+        new Thread(() -> {
+            System.out.println("Executing executor service");
+            jobProcessorExecutorService.start();
+        }).start();
     }
 }
